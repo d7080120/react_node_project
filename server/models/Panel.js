@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const panelSchema = new mongoose.Schema({
     customer: {
         type: mongoose.ObjectId, ref: 'Customer',
+        immutable:true,
         required
     },
     questions: {
@@ -44,13 +45,14 @@ const panelSchema = new mongoose.Schema({
         type: mongoose.ObjectId, ref: 'Analysis_panel',
 
     },
-    Constraints: {
+    constraints: {
         type: [{
             enum: ["age", "gender", "location"],
             body: { type: String, required },
         }]
-    }
+    },
+    anonyous:Boolean
 }, {
     timestamps: true
 })
-module.exports = mongoose.model('Panel', photoSchema)
+module.exports = mongoose.model('Panel', panelSchema)
