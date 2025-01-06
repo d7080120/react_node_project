@@ -1,44 +1,46 @@
 const mongoose = require('mongoose')
 const participantSchema = new mongoose.Schema({
-    gender:{enum:["female","male"]},
-    name:{
-    type:String,
-    required:true,
+    gender: {
+        type:String,
+         enum: ["female", "male"] ,
+        requierd:true
     },
-    email: {
-    type: String,
-    lowercase: true,
-    trim:true,
-    required:true,
+    user:{
+        type:mongoose.Schema.ObjectId,
+        ref:"User",
+        required:true
     },
     phone: {
-    type: String,
-    required:true,
+        type: String,
+        required: true,
     },
-    dateOfBirth:mongoose.Schema.Types.Date,
-    address:{
-        country:{
+    dateOfBirth:{
+type:mongoose.Schema.Types.Date,
+required:true
+    } ,
+    address: {
+        country: {
             type: String,
-            required:true,
-            },
-        city:{
+            required: true,
+        },
+        city: {
             type: String,
-            required:true,
-            },
-        street:{
+            required: true,
+        },
+        street: {
             type: String,
-            required:true,
-            },
-        build:{
-            type: int,
-            required:true,
-            },
-        floor:{
-            type: int,
-            required:true,
-            }
+            required: true,
+        },
+        build: {
+            type: mongoose.Schema.Types.Int32,
+            required: true,
+        },
+        apartment: {
+            type: mongoose.Schema.Types.Int32,
+            required: true,
+        }
     },
-    score:int
+   score : mongoose.Schema.Types.Int32
 }, {
     timestamps: true
 })

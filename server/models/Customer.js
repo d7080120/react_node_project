@@ -1,19 +1,18 @@
 const mongoose = require("mongoose")
+const Panel = require("../models/Panel");
 const Schema = mongoose.Schema
 const customerSchema = new Schema({
     name: {
         type: String,
         required: true,
     },
-    email: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required
+    user:{
+        type:Schema.ObjectId,
+        ref:"User",
+        required:true
     },
     phone: {
         type: String,
-        required
     },
     panels:{
         type: [{type:mongoose.ObjectId, ref: 'Panel'}]

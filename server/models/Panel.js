@@ -1,20 +1,27 @@
 const mongoose = require('mongoose')
+// const Cost = require("../models/Cost");
+// const Cost = require("../models/Customer");
+// const Cost = require("../models/Participant");
+// const Cost = require("../models/Constraint");
+// const Cost = require("../models/Analysis_question");
+
+
 const panelSchema = new mongoose.Schema({
     customer: {
         type: mongoose.ObjectId, ref: 'Customer',
         immutable:true,
-        required
+        required:true
     },
     questions: {
         type: [{
-            title: { type: String, required },
-            questionType: { enum: ["text", "check1", "checkMore", "range"] },
-            cotents: { type: String, required },
-            answers: [string],
+            title: { type: String, required:true },
+            questionType: { String},
+            cotents: { type: String, required:true },
+            answers: [String],
             userAnswers: [
                 {
-                    answer: int,
-                    body: string,
+                    answer: mongoose.Schema.Types.Int32,
+                    body: String,
                     participant: { type: mongoose.ObjectId, ref: 'Participant' }
                 }
             ],
@@ -22,12 +29,12 @@ const panelSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.Double
             },
             score: {
-                type: int
+                type:  mongoose.Schema.Types.Int32
             },
             analysis_question: {
                 type: mongoose.ObjectId, ref: 'Analysis_question',
             },
-            extra: [{ enum: ["must", "withOpenText", "image"] }],
+            extra: [String],
         }
         ]
     },
@@ -35,10 +42,10 @@ const panelSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Double
     },
     score: {
-        type: int
+        type:  mongoose.Schema.Types.Int32
     },
     numsOfParticipants: {
-        type: int,
+        type:  mongoose.Schema.Types.Int32,
         default: 1000
     },
     analysis_panel: {
@@ -47,8 +54,8 @@ const panelSchema = new mongoose.Schema({
     },
     constraints: {
         type: [{
-            enum: ["age", "gender", "location"],
-            body: { type: String, required },
+            type: { type: mongoose.ObjectId, ref: 'Constraint'},
+            body: { type: String, required:true},
         }]
     },
     anonyous:Boolean
