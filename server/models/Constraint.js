@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const constraintSchema = new Schema({
     name: {
         type: String,
-        required
+        required:true
     }
 },{timestamps:true})
 module.exports = mongoose.model("Constraint", constraintSchema)

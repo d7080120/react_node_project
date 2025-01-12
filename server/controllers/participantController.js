@@ -1,4 +1,7 @@
 const Participant = require("../models/Participant");
+const User = require("../models/User");
+const Customer = require("../models/Customer");
+const bcrypt = require('bcrypt')
 
 
 const getAllParticipants = async (req, res) => {
@@ -10,8 +13,8 @@ const getAllParticipants = async (req, res) => {
 }
 
 const getParticipantById = async (req, res) => {
-    const { id } = req.params
-    const participant = await Participant.findById(id).lean()
+    const { _id } = req.body
+    const participant = await Participant.findById(_id).lean()
     if (!participant) {
         return res.status(400).json({ message: 'No participants found' })
     }
@@ -19,50 +22,68 @@ const getParticipantById = async (req, res) => {
 }
 
 const updateParticipant = async (req, res) => {
-    const { id, username, name, email, address, phone, password, roles, active, gender } = req.name
-    if (!id || !username || !password || !name) {
+    const { _id, username, name, email, address, phone, password, roles, active, gender ,date,score} = req.body
+    
+    if (!_id || !username || !password || !name) {
         return res.status(400).json({ message: "fields are required" })
     }
-    const duplicate = await User.findOne({ username: username }).lean()
-    if (duplicate) {
-        return res.status(409).json({ message: "Duplicate username" })
+    const duplicate = await Participant.findOne({ username: username }).lean()
+    if (duplicate&&duplicate._id!=_id) {
+        return res.status(409).json({ message: `${duplicate._id} Duplicate username` })
     }
-    const participant = await Participant.findById(id).exec()
+    const participant = await Participant.findById(_id).exec()
     if (!participant) {
         return res.status(400).json({ message: 'participant not found' })
     }
-    const participantUser = await User.findById(participant.user._id).exec()
+    console.log("oooooo");
+    const participantUser = await User.findById(participant.user).exec()
     if (!participantUser) {
         return res.status(400).json({ message: 'participantUser not found' })
     }
+    console.log(participantUser);
+    if (roles.find(r=>r==="Customer")&&(!participantUser.roles.find(r=>r==="Customer"))){
+        const customerObject = { user: participant.user, phone, panels:[] }
+        const customer = await Customer.create(customerObject)
+        if (!customer) {
+            return res.status(400).json({ message: 'Invalid customer' })
+
+            // if (user.roles.length === 1) {
+            //     await user.deleteOne()
+            // }
+            // return res.status(400).json({ message: "Invalid customer received" })
+        }
+    }
+        
+    
     participantUser.username = username
     participantUser.email = email
     participantUser.active = active
     participantUser.roles = [...roles]
-    participantUser.password = password
+    const hashedPwd = await bcrypt.hash(password, 10)
+    participantUser.password = hashedPwd
     participant.address = { ...address }
     participant.phone = phone
     participant.gender = gender
-    participant.dateOfBirth = { ...dateOfBirth }
+    participant.dateOfBirth  = new Date(date)
     participant.score = score
-    participant.name = name
+    participantUser.name = name
 
     const updatedParticipantUser = await participantUser.save()
     const updatedParticipant = await participant.save()
 
     const participants = await Participant.find().lean()
     res.json({
-        message: `${updatedParticipant.username} updated`,
+        message: `${updatedParticipantUser.username} updated`,
         participants
     })
-}
 
+}
 const deleteParticipant = async (req, res) => {
-    const { id } = req.name
-    if (!id) {
+    const { _id } = req.params
+    if (!_id) {
         return res.status(400).json({ message: "id is required" })
     }
-    const participant = await Participant.findById(id).exec()
+    const participant = await Participant.findById(_id).exec()
     if (!participant) {
         return res.status(400).json({ message: 'Participant not found' })
     }
@@ -75,14 +96,17 @@ const deleteParticipant = async (req, res) => {
     else{
         participantUser.roles=participantUser.roles.filter(role=>role!="Participant")
     }
+    const updatedParticipantUser = await participantUser.save()
+
     await participant.deleteOne()
 
     const participants = await Participant.find().lean()
     res.json({
-        message: `participant ${participant.username} id ${participant.id} deleted`,
+        message: `participant ${participant.username} id ${participant._id} deleted`,
         participants
     })
 }
+
 module.exports = {
     getAllParticipants,
     getParticipantById,

@@ -5,7 +5,7 @@ const createCost = async (req, res) => {
     if (!cost||!name||!score||!category) {
         return res.status(400).json({ message: 'fields are required' })
     }
-    const ifName=await Cost.find({name:name})
+    const ifName=await Cost.findOne({name:name})
     if (ifName)
         return res.status(400).json({ message: 'name already exist' })
 
@@ -21,6 +21,7 @@ const createCost = async (req, res) => {
 }
 
 const getAllCosts = async (req,res) => {
+    console.log(req.user)
     const costs=await Cost.find().lean()
     if(!costs?.length){
         return res.status(400).json({message: 'No costs found'})
@@ -29,8 +30,8 @@ const getAllCosts = async (req,res) => {
 }
 
 const getCostById = async (req, res) => {
-    const {id} = req.params
-    const cost = await Cost.findById(id).lean()
+    const {_id} = req.params
+    const cost = await Cost.findById(_id).lean()
     if (!cost) {
     return res.status(400).json({ message: 'No costs found' })
     }
@@ -38,11 +39,15 @@ const getCostById = async (req, res) => {
     }
 
 const updateCost=async (req,res)=>{
-    const {name, description, cost, score,category }=req.name
+    const {name, description, cost, score,category }=req.body
     if(!cost||!name||!score||!category){
         return res.status(400).json({ message: "fields are required" })
     }
-    const newCost= await Cost.findById(id).exec()
+    const duplicate = await Customer.findOne({ name: name }).lean()
+    if (duplicate&&duplicate._id!=_id) {
+        return res.status(409).json({ message: "Duplicate name" })
+    }
+    const newCost= await Cost.findById(_id).exec()
     if(!cost){
         return res.status(400).json({ message: 'cost not found' })
     }
@@ -59,19 +64,19 @@ const updateCost=async (req,res)=>{
 }
 
 const deleteCost=async (req,res)=>{
-    const {id}=req.name
+    const {_id}=req.body
 
-    if(!id){
+    if(!_id){
         return res.status(400).json({ message: "id is required" })
     }
-    const cost = await Cost.findById(id).exec()
+    const cost = await Cost.findById(_id).exec()
     if(!cost){
         return res.status(400).json({ message: 'Cost not found' })
     }
 
     await cost.deleteOne()
 
-    res.send(`cost ${cost.costname} id ${cost.id} deleted`)
+    res.send(`cost ${cost.costname} id ${cost._id} deleted`)
 }
 module.exports = {
     createCost,

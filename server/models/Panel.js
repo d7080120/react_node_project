@@ -15,7 +15,7 @@ const panelSchema = new mongoose.Schema({
     questions: {
         type: [{
             title: { type: String, required:true },
-            questionType: { String},
+            questionType:  { type: mongoose.ObjectId, ref: 'Cost' },
             cotents: { type: String, required:true },
             answers: [String],
             userAnswers: [
@@ -34,7 +34,7 @@ const panelSchema = new mongoose.Schema({
             analysis_question: {
                 type: mongoose.ObjectId, ref: 'Analysis_question',
             },
-            extra: [String],
+            extra: [{ type: mongoose.ObjectId, ref: 'Cost' }],
         }
         ]
     },
@@ -54,11 +54,13 @@ const panelSchema = new mongoose.Schema({
     },
     constraints: {
         type: [{
-            type: { type: mongoose.ObjectId, ref: 'Constraint'},
+            constraint: { type: mongoose.ObjectId, ref: 'Constraint'},
             body: { type: String, required:true},
         }]
     },
-    anonyous:Boolean
+    name:{type:mongoose.Schema.Types.String,required:true},
+    description:{type:mongoose.Schema.Types.String}
+    
 }, {
     timestamps: true
 })

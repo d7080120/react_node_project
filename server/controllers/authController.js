@@ -10,6 +10,7 @@ const login = async (req, res) => {
     if (!username || !password) {
         return res.status(400).json({ message: 'All fields are required' })
     }
+    console.log(username)
     const foundUser = await User.findOne({ username }).lean()
     if (!foundUser || !foundUser.active) {
         return res.status(401).json({ message: 'Unauthorized' })
@@ -42,20 +43,20 @@ const login = async (req, res) => {
             phone: foundParticipant.phone,
             dateOfBirth: { ...foundParticipant.dateOfBirth },
             address: { ...foundParticipant.address },
-            score:foundParticipant.score,
-            gender:foundParticipant.gender
+            score: foundParticipant.score,
+            gender: foundParticipant.gender
         }
     }
 
     const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
     res.json({ accessToken: accessToken })
 
-    res.send("Logged In")
+    // res.send("Logged In")
 
 }
 const registerParticipant = async (req, res) => {
-    const { username, password, name, email, phone, country, city, street, build, apartment, dateOfBirth,gender } = req.body
-    if (!name || !username || !password || !email || !phone || !country || !city || !street || !build || !apartment || !dateOfBirth||!gender) {// Confirm data
+    const { username, password, name, email, phone, country, city, street, build, apartment, date, gender } = req.body
+    if (!name || !username || !password || !email || !phone || !country || !city || !street || !build || !apartment || !date || !gender) {// Confirm data
         return res.status(400).json({ message: 'All fields are required' })
     }
     const duplicate = await User.findOne({ username: username }).lean()
@@ -63,7 +64,7 @@ const registerParticipant = async (req, res) => {
         return res.status(409).json({ message: "Duplicate username" })
     }
     const hashedPwd = await bcrypt.hash(password, 10)
-    const userObject = { name, email, username, active: true, phone, password: hashedPwd, roles: ["Participant"] }
+    const userObject = { name, email, username, active: true, password: hashedPwd, roles: ["Participant"] }
     const user = await User.create(userObject)
 
     if (!user) {
@@ -71,13 +72,20 @@ const registerParticipant = async (req, res) => {
 
     }
     userId = user._id
-    const participantObject = { user: userId, phone, address, dateOfBirth, build, street, city, country, apartment, score: 0 ,gender}
-    const participant = await User.create(participantObject)
-    const participants = await Post.find().lean()
+    const address = {
+        build, street, city, country, apartment
+    }
+    const dateOfBirth = new Date(date)
+    const participantObject = { user: userId, phone, address, dateOfBirth, score: 0, gender }
+    const participant = await Participant.create(participantObject)
     if (!participant) {
+        console.log(user.roles.length)
+        if (user.roles.length === 1) {
+            await user.deleteOne()
+        }
         return res.status(400).json({ message: "Invalid participant received" })
     }
-
+    const participants = await Participant.find().lean()
     return res.status(201).json({
         message: `New user type participant ${user.username}created`,
         participants
@@ -93,21 +101,22 @@ const registerCustomer = async (req, res) => {
         return res.status(409).json({ message: "Duplicate username" })
     }
     const hashedPwd = await bcrypt.hash(password, 10)
-    const userObject = { name, email, username, active: true, phone, password: hashedPwd, roles: ["Customer"] }
+    const userObject = { name, email, username, active: true, password: hashedPwd, roles: ["Customer"] }
     const user = await User.create(userObject)
-
     if (!user) {
         return res.status(400).json({ message: 'Invalid user received' })
-
     }
     userId = user._id
-    const customerObject = { user: userId, phone }
-    const customer = await User.create(customerObject)
-    const customers = await Post.find().lean()
+    const panels = []
+    const customerObject = { user: userId, phone, panels }
+    const customer = await Customer.create(customerObject)
     if (!customer) {
+        if (user.roles.length === 1) {
+            await user.deleteOne()
+        }
         return res.status(400).json({ message: "Invalid customer received" })
     }
-
+    const customers = await Customer.find().lean()
     return res.status(201).json({
         message: `New user type customer ${user.username}created`,
         customers
@@ -123,16 +132,15 @@ const registerMaster = async (req, res) => {
         return res.status(409).json({ message: "Duplicate username" })
     }
     const hashedPwd = await bcrypt.hash(password, 10)
-    const userObject = { name, email, username, active: true, phone, password: hashedPwd, roles: ["Master"] }
+    const userObject = { name, email, username, active: true, password: hashedPwd, roles: ["Master"] }
     const user = await User.create(userObject)
-
     if (!user) {
         return res.status(400).json({ message: 'Invalid user received' })
 
     }
     return res.status(201).json({
         message: `New user type customer ${user.username}created`,
-        customers
+        user
     })
 }
-module.exports = { login, registerParticipant, registerCustomer,registerMaster }
+module.exports = { login, registerParticipant, registerCustomer, registerMaster }
