@@ -53,7 +53,8 @@ const panelSchema = new mongoose.Schema({
         }]
     },
     name:{type:mongoose.Schema.Types.String,required:true},
-    description:{type:mongoose.Schema.Types.String}
+    description:{type:mongoose.Schema.Types.String},
+    enable:{ type:mongoose.Schema.Types.Boolean,default:true}
     
 }, {
     timestamps: true

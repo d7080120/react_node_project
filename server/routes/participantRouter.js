@@ -9,6 +9,6 @@ router.get("/",masterMW,participantConroller.getAllParticipants)
 router.use(participantMW)
 router.get("/:_id",participantConroller.getParticipantById)
 router.put("/",participantConroller.updateParticipant)
-router.delete("/_id",participantConroller.deleteParticipant)
+router.delete("/",participantConroller.deleteParticipant)
 
 module.exports = router

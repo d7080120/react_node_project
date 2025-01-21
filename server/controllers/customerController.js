@@ -22,7 +22,9 @@ const getCustomerById = async (req, res) => {
 }
 
 const updateCustomer = async (req, res) => {
-    const { _id, username, name, email,  phone, password, roles, active,panels, country, city, street, build, apartment, date, gender } = req.body
+    
+    const{ _id, username, name, email,password, roles, active}=req.user
+    const {  phone ,panels, country, city, street, build, apartment, date, gender } = req.body
     if (!_id || !username || !password || !name||!email) {
         return res.status(400).json({ message: "fields are required" })
     }
@@ -74,7 +76,7 @@ const updateCustomer = async (req, res) => {
 }
 
 const deleteCustomer = async (req, res) => {
-    const { _id } = req.params
+    const { _id } = req.user
     if (!_id) {
         return res.status(400).json({ message: "id is required" })
     }

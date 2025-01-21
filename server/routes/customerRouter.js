@@ -10,6 +10,6 @@ router.get("/",masterMW,customerConroller.getAllCustomers)
 router.use(customerMW)
 router.get("/:_id",customerConroller.getCustomerById)
 router.put("/",customerConroller.updateCustomer)
-router.delete("/_id",customerConroller.deleteCustomer)
+router.delete("/",customerConroller.deleteCustomer)
 
 module.exports = router

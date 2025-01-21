@@ -22,7 +22,8 @@ const getParticipantById = async (req, res) => {
 }
 
 const updateParticipant = async (req, res) => {
-    const { _id, username, name, email, address, phone, password, roles, active, gender ,date,score} = req.body
+    const{ _id, username, name, email,password, roles, active}=req.user
+    const { address, phone,  gender ,date,score} = req.body
     
     if (!_id || !username || !password || !name) {
         return res.status(400).json({ message: "fields are required" })
@@ -79,7 +80,7 @@ const updateParticipant = async (req, res) => {
 
 }
 const deleteParticipant = async (req, res) => {
-    const { _id } = req.params
+    const { _id } = req.user
     if (!_id) {
         return res.status(400).json({ message: "id is required" })
     }

@@ -38,14 +38,14 @@ const calculateCostAndScore = async (questions, numsOfParticipants) => {
 
 }
 const createPanel = async (req, res) => {
-    const { customer, questions, numsOfParticipants, constraints, name, description } = req.body
+    const { customer, questions, numsOfParticipants, constraints, name, description,enable } = req.body
     if (!customer || !name) {
         return res.status(400).json({ message: 'fildes are required' })
     }
 
     try {
         const { cost, score } = await calculateCostAndScore(questions, numsOfParticipants)
-        const panel = await Panel.create({ customer, questions, numsOfParticipants, constraints, cost, score, name, description })
+        const panel = await Panel.create({ customer, questions, numsOfParticipants, constraints, cost, score, name, description,enable })
         const panels = await Panel.find().lean()
 
         if (panel) {
@@ -89,7 +89,7 @@ const getPanelById = async (req, res) => {
 }
 
 const updatePanel = async (req, res) => {
-    const { _id, questions, numsOfParticipants, constraints, name, description } = req.body
+    const { _id, questions, numsOfParticipants, constraints, name, description,enable } = req.body
     if (!_id || !name) {
         return res.status(400).json({ message: "fileds are required" })
     }
@@ -110,6 +110,7 @@ const updatePanel = async (req, res) => {
     panel.constraints = [...constraints]
     panel.name = name
     panel.description = description
+    panel.enable=enable
     const updatedPanel = await panel.save()
     const panels = await Panel.find().lean()
     res.json(panels)
