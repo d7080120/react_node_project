@@ -5,7 +5,8 @@ const dailyLotterySchema = new Schema({
         type: String,
         lowercase: true,
         trim: true,
-        required:true
-    }
+        required:true,
+        unique: true
+        }
 },{timestamps:true})
 module.exports = mongoose.model("DailyLottery", dailyLotterySchema)

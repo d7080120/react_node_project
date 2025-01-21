@@ -4,6 +4,9 @@ const createDailyLottery = async (req, res) => {
     const { email } = req.body
     if (!email) {
         return res.status(400).json({ message: 'email is required' })
+    }const duplicate = await User.findOne({ email: email }).lean()
+    if (duplicate) {
+        return res.status(409).json({ message: "Duplicate email" })
     }
     const newDailyLottery = await DailyLottery.create({ email})
     if (newDailyLottery) { // Created

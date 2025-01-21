@@ -1,10 +1,4 @@
 const mongoose = require('mongoose')
-// const Cost = require("../models/Cost");
-// const Cost = require("../models/Customer");
-// const Cost = require("../models/Participant");
-// const Cost = require("../models/Constraint");
-// const Cost = require("../models/Analysis_question");
-
 
 const panelSchema = new mongoose.Schema({
     customer: {
