@@ -21,7 +21,7 @@ export default function NavBar() {
             label: 'Login',
             icon: 'pi pi-home',
             command:()=>{
-                navigate('/login')
+                navigate('/home')
             } 
         }
     ];

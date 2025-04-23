@@ -14,7 +14,7 @@ const panelSchema = new mongoose.Schema({
             answers: [String],
             userAnswers: [
                 {
-                    answer: mongoose.Schema.Types.Int32,
+                    // answer: mongoose.Schema.Types.Int32,
                     body: String,
                     participant: { type: mongoose.ObjectId, ref: 'Participant' }
                 }

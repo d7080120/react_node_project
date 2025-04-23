@@ -8,6 +8,7 @@ const participantMW = require("../middleware/participantMW")
 const panelConroller=require("../controllers/panelController")
 router.get("/",participantMW,panelConroller.getAllPanels)
 router.get("/",panelConroller.getAllPanels)
+router.put("/addAnswers",participantMW,panelConroller.addAnswer)
 
 router.use(customerMW)
 

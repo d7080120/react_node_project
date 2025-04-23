@@ -6,7 +6,7 @@ import { Dialog } from 'primereact/dialog';
 function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) {
     const handleSave = () => {
         if (selectedAnswer) {
-            onSave(selectedAnswer,question.points); // Save the answer
+            onSave(question._id,selectedAnswer,question.score); // Save the answer
             onNext();
         }
     };
@@ -29,10 +29,11 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
         setPosition(position);
         setVisible(true);
     };
+    console.log(question);
     return (
         <Card title={question.title} style={{ width: '400px', margin: '20px auto' }}>
             <div style={{ fontWeight: 'bold' }}>
-                This question will give you {question.points} points
+                This question will give you {question.score} points
             </div>
 
             {question.answers.map((answer, index) => (
@@ -48,13 +49,13 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
             ))}
             <div style={{ marginTop: '20px' }}>
                 <Button
-                    label="Save"
+                    label="Continue"
                     icon="pi pi-save"
                     onClick={handleSave}
                     disabled={!selectedAnswer} // Disable until an answer is selected
                     style={{ marginRight: '10px' }}
                 />
-                <Button label="Next Question" icon="pi pi-arrow-right" onClick={() => show('top')} className="p-button" />
+                <Button label="Skip Question" icon="pi pi-arrow-right" onClick={() => show('top')} className="p-button" />
 
                 {/* <Button
                     label="Next"
@@ -63,7 +64,7 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
                 /> */}
                 <Dialog header="skip qustion" visible={visible} position={position} style={{ width: '50vw' }} onHide={() => {if (!visible) return; setVisible(false); }} footer={footerContent} draggable={false} resizable={false}>
                 <p className="m-0">
-                    if you skip this question you will lose {question.points} points
+                    if you skip this question you will lose {question.score} points
                     <br/>
                     are you sure that you want to skip?
                 </p>

@@ -3,6 +3,7 @@ const customerMW = (req, res, next) => {
     if(!role){
         return res.status(401).json({ message: 'customer Unauthorized' })
     }
+
     next()
 }
 module.exports = customerMW

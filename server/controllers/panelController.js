@@ -70,7 +70,28 @@ const getAllPanels = async (req, res) => {
     }
     res.json(panels)
 }
+const addAnswer=async (req,res)=>{
+    const {panel_id,answers,participant}=req.body
+    if (!panel_id || !answers ||!participant) {
+        return res.status(400).json({ message: 'fildes are required' })
+    }
+    const panel= await Panel.findById(panel_id).exec()
+    if (!panel) {
+        return res.status(400).json({ message: 'No panels found' })
+    }
+    questions=panel.questions
+    console.log(answers);
 
+    answers.forEach(ans => {
+
+       const quest=questions.find((q)=>{ return q._id.toString()===ans.question_id})
+        quest.userAnswers.push({body:ans.answer,participant})
+    });
+    panel.questions = [...questions]
+    console.log(typeof panel);
+    const updatedPanel = await panel.save()
+    res.json(answers)
+}
 const getAllPanelsByCustomer = async (req, res) => {
     const {_id}=req.params
     const panels = await Panel.find({customer:_id}).lean()
@@ -140,5 +161,6 @@ module.exports = {
     getPanelById,
     updatePanel,
     deletePanel,
-    getAllPanelsByCustomer
+    getAllPanelsByCustomer,
+    addAnswer
 }
