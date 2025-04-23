@@ -1,0 +1,36 @@
+import React from 'react';
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
+function CustomerHome() {
+    const navigate = useNavigate(); // Use useNavigate instead of useHistory
+
+    const handleButtonClick = (path) => {
+        navigate(path); // Navigate to the selected path
+    };
+
+    return (
+        <Card title="Select an Option" style={{ width: '400px', margin: '20px auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Button
+                    label="Go to Component A"
+                    onClick={() => handleButtonClick('/panel')}
+                    style={{ marginBottom: '10px', width: '100%' }}
+                />
+                <Button
+                    label="Go to Component B"
+                    onClick={() => handleButtonClick('/component-b')}
+                    style={{ marginBottom: '10px', width: '100%' }}
+                />
+                <Button
+                    label="Go to Component C"
+                    onClick={() => handleButtonClick('/component-c')}
+                    style={{ marginBottom: '10px', width: '100%' }}
+                />
+            </div>
+        </Card>
+    );
+}
+
+export default CustomerHome;
