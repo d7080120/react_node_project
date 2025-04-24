@@ -30,7 +30,7 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <div className="App">
-        {/* <NavBar/> */}
+        {/* <Login/> */}
         {shouldShowNavbar && <NavBar />}
         <Routes>
           {/* <UpdateUser user={user}/> */}

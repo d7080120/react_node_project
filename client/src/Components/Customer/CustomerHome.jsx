@@ -14,8 +14,8 @@ function CustomerHome() {
         <Card title="Select an Option" style={{ width: '400px', margin: '20px auto' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <Button
-                    label="Go to Component A"
-                    onClick={() => handleButtonClick('/panel')}
+                    label="to purchase a panel"
+                    onClick={() => handleButtonClick('/orderpanel')}
                     style={{ marginBottom: '10px', width: '100%' }}
                 />
                 <Button

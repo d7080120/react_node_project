@@ -25,6 +25,7 @@ const calculateCostAndScore = async (questions, numsOfParticipants) => {
         score += questionScore
         cost += questionCost
     });
+
     const costsNumsOfParticipants = costs.filter(c => c.category === "numsOfParticipants")
     costPerParticipants = costsNumsOfParticipants.find(c => c.name === `${numsOfParticipants}Participants`)
     if (costPerParticipants)
@@ -44,9 +45,17 @@ const createPanel = async (req, res) => {
     }
 
     try {
-        const { cost, score } = await calculateCostAndScore(questions, numsOfParticipants)
-        const panel = await Panel.create({ customer, questions, numsOfParticipants, constraints, cost, score, name, description,enable })
+        console.log("p");
+
+        // const { cost, score } = await calculateCostAndScore(questions, numsOfParticipants)
+        const cost = numsOfParticipants*questions.length*0.2
+        const score = questions.length*3
+        console.log(constraints);
+        const panel = await Panel.create({ customer, questions, numsOfParticipants, constraints, cost, score, name, description ,enable })
+        console.log("p2");
+
         const panels = await Panel.find().lean()
+        console.log("p3");
 
         if (panel) {
             return res.status(201).json({
@@ -58,7 +67,8 @@ const createPanel = async (req, res) => {
         }
     }
     catch (e) {
-        res.status(400).json({ "error": e })
+        console.log(e.message);
+        res.status(400).json({ "error": e.message })
     }
 
 }
@@ -119,9 +129,11 @@ const updatePanel = async (req, res) => {
         return res.status(400).json({ message: 'panel not found' })
     }
     try {
-        const { cost, score } = calculateCostAndScore(questions, numsOfParticipants)
-        panel.cost = cost
-        panel.score = score
+        // const { cost, score } = calculateCostAndScore(questions, numsOfParticipants)
+        // panel.cost = cost
+        // panel.score = score
+        panel.cost = numsOfParticipants*questions.length*0.2
+        panel.score = questions.length*3
     }
     catch (e) {
         res.status(400).json(e)

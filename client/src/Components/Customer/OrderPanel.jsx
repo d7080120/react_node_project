@@ -1,170 +1,3 @@
-// import React, { useState } from 'react';
-// import { Card } from 'primereact/card';
-// import { Button } from 'primereact/button';
-// import { InputText } from 'primereact/inputtext';
-// import { InputTextarea } from 'primereact/inputtextarea';
-
-// const QuestionCard = ({ onAddQuestion }) => {
-//     const [newQuestion, setNewQuestion] = useState({
-//         title: '',
-//         content: '',
-//         answers: [''] // Array to hold multiple answers
-//     });
-
-//     const handleInputChange = (e) => {
-//         const { name, value } = e.target;
-//         if (name === 'answers') {
-//             const answers = [...newQuestion.answers];
-//             answers[e.target.dataset.index] = value;
-//             setNewQuestion({
-//                 ...newQuestion,
-//                 answers
-//             });
-//         } else {
-//             setNewQuestion({
-//                 ...newQuestion,
-//                 [name]: value
-//             });
-//         }
-//     };
-
-// const addAnswerField = () => {
-//     setNewQuestion({
-//         ...newQuestion,
-//         answers: [...newQuestion.answers, ''] // Add new empty answer field
-//     });
-// };
-
-//     const handleAddQuestion = () => {
-//         if (newQuestion.title && newQuestion.content) {
-//             onAddQuestion(newQuestion);
-//             setNewQuestion({ title: '', content: '', answers: [''] }); // Reset after adding
-//         }
-//     };
-
-//     return (
-//         <Card title="Add Question" style={{ width: '400px', margin: '20px' }}>
-//             <div className="p-field">
-//                 <label htmlFor="title">Question Title</label>
-//                 <InputText 
-//                     id="title" 
-//                     name="title" 
-//                     value={newQuestion.title} 
-//                     onChange={handleInputChange} 
-//                     style={{ width: '100%' }} 
-//                 />
-//             </div>
-//             <div className="p-field">
-//                 <label htmlFor="content">Question Content</label>
-//                 <InputTextarea 
-//                     id="content" 
-//                     name="content" 
-//                     value={newQuestion.content}
-//                     onChange={handleInputChange}
-//                     rows={3}
-//                     style={{ width: '100%' }} 
-//                 />
-//             </div>
-//             <div className="p-field">
-//                 <label>Answers</label>
-//                 {newQuestion.answers.map((answer, index) => (
-//                     <InputText 
-//                         key={index} 
-//                         data-index={index} 
-//                         name="answers" 
-//                         value={answer} 
-//                         onChange={handleInputChange} 
-//                         style={{ width: '100%', marginBottom: '10px' }} 
-//                         placeholder={`Answer ${index + 1}`} 
-//                     />
-//                 ))}
-//                 <Button label="Add Answer" type="button" onClick={addAnswerField} />
-//             </div>
-//             <Button label="Add Question" onClick={handleAddQuestion} style={{ marginTop: '10px' }} />
-//         </Card>
-//     );
-// };
-
-// const OrderPanel = () => {
-//     const [panelDetails, setPanelDetails] = useState({
-//         name: '',
-//         description: '',
-//         numsOfParticipants: 1000,
-//         questions: [],
-//     });
-
-//     const handlePanelChange = (e) => {
-//         const { name, value } = e.target;
-//         setPanelDetails({
-//             ...panelDetails,
-//             [name]: value
-//         });
-//     };
-
-//     const addQuestion = (question) => {
-//         setPanelDetails({
-//             ...panelDetails,
-//             questions: [...panelDetails.questions, question]
-//         });
-//     };
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         // Submit panel details to the backend (example API endpoint)
-//         await fetch('/api/panels', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(panelDetails),
-//         });
-
-//         // Reset the panel form after submission if needed
-//         setPanelDetails({
-//             name: '',
-//             description: '',
-//             numsOfParticipants: 1000,
-//             questions: [],
-//         });
-//     };
-
-//     return (
-//         <div className="order-panel">
-//             <h2>Create Panel Order</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <div className="p-field">
-//                     <label htmlFor="name">Panel Name</label>
-//                     <InputText id="name" name="name" value={panelDetails.name} onChange={handlePanelChange} required />
-//                 </div>
-
-//                 <div className="p-field">
-//                     <label htmlFor="description">Description</label>
-//                     <InputTextarea id="description" name="description" value={panelDetails.description} onChange={handlePanelChange} rows={3} />
-//                 </div>
-
-//                 <div className="p-field">
-//                     <label htmlFor="numsOfParticipants">Number of Participants</label>
-//                     <InputText id="numsOfParticipants" value={panelDetails.numsOfParticipants} onChange={(e) => handlePanelChange({ target: { name: 'numsOfParticipants', value: e.target.value } })} />
-//                 </div>
-
-//                 <QuestionCard onAddQuestion={addQuestion} />
-
-//                 <h4>Current Questions</h4>
-//                 <ul>
-//                     {panelDetails.questions.map((q, index) => (
-//                         <li key={index}>
-//                             {q.title}: {q.content} | Answers: {q.answers.join(', ')}
-//                         </li>
-//                     ))}
-//                 </ul>
-
-//                 <Button label="Submit Panel Order" type="submit" />
-//             </form>
-//         </div>
-//     );
-// };
-
-// export default OrderPanel
 
 
 
@@ -192,44 +25,16 @@
 
 
 
-
-
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
+import axios from 'axios';
+import { Toast } from 'primereact/toast';
+import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
-const QuestionCard = ({ question, onRemoveQuestion, onChange }) => {
-    const [newQuestion, setNewQuestion] = useState({
-        title: '',
-        content: '',
-        answers: [''] // Array to hold multiple answers
-    });
-
-    const addAnswerField = () => {
-        setNewQuestion({
-            ...newQuestion,
-            answers: [...newQuestion.answers, ''] // Add new empty answer field
-        });
-    };
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'answers') {
-            const answers = [...newQuestion.answers];
-            answers[e.target.dataset.index] = value;
-            setNewQuestion({
-                ...newQuestion,
-                answers
-            });
-        } else {
-            setNewQuestion({
-                ...newQuestion,
-                [name]: value
-            });
-        }
-    };
+const QuestionCard = React.memo(({ question, onRemoveQuestion, onChange, onRemoveAnswer, onAddAnswer }) => {
     return (
         <Card title="Question" style={{ width: '350px', margin: '10px' }}>
             <div className="p-field">
@@ -255,34 +60,42 @@ const QuestionCard = ({ question, onRemoveQuestion, onChange }) => {
             </div>
             <div className="p-field">
                 <label>Answers</label>
-                {newQuestion.answers.map((answer, index) => (<>
-                    <InputText
-                        key={index}
-                        data-index={index}
-                        name="answers"
-                        value={answer}
-                        onChange={handleInputChange}
-                        style={{ width: '100%', marginBottom: '10px' }}
-                        placeholder={`Answer ${index + 1}`}
-
-                    />
-                    <Button icon="pi pi-shopping-cart" className="p-button-rounded" ></Button>
-                    <br/>
-                </>
+                {question.answers.map((answer, index) => (
+                    <div key={`${question.id}-answer-${index}`} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <InputText
+                            data-index={index}
+                            name="answers"
+                            value={answer}
+                            onChange={(e) => onChange(e, question.id, index)}
+                            style={{ flex: 1, marginRight: '10px' }}
+                            placeholder={`Answer ${index + 1}`}
+                        />
+                        <Button
+                            icon="pi pi-times"
+                            className="p-button-rounded p-button-danger"
+                            onClick={() => onRemoveAnswer(question.id, index)}
+                        />
+                    </div>
                 ))}
-                <Button label="Add Answer" type="button" onClick={addAnswerField} />
+                <Button label="Add Answer" type="button" onClick={() => onAddAnswer(question.id)} />
             </div>
+            <br />
             <Button label="Remove Question" onClick={() => onRemoveQuestion(question.id)} />
         </Card>
     );
-};
+});
 
 const OrderPanel = () => {
+    const toast = useRef(null);
+    const { token } = useSelector((state) => state.token);
+    const { userInfo } = useSelector((state) => state.token);
+    const navigate = useNavigate();
     const [panelDetails, setPanelDetails] = useState({
         name: '',
         description: '',
         numsOfParticipants: 1000,
         questions: [],
+        customer:userInfo._id
     });
 
     const handlePanelChange = (e) => {
@@ -294,20 +107,31 @@ const OrderPanel = () => {
     };
 
     const addQuestion = () => {
-        const newQuestion = { id: Date.now(), title: '', content: '' };
+        const newQuestion = { id: Date.now(), title: '', cotents: '', answers: [''] ,userAnswewrs:[]};
         setPanelDetails((prev) => ({
             ...prev,
             questions: [...prev.questions, newQuestion],
         }));
     };
 
-    const handleQuestionChange = (e, id) => {
-        const { name, value } = e.target;
+    const handleQuestionChange = (e, id, index = null) => {
+        const { name, value,content } = e.target;
         setPanelDetails((prev) => ({
             ...prev,
-            questions: prev.questions.map((q) =>
-                q.id === id ? { ...q, [name]: value } : q
-            ),
+            questions: prev.questions.map((q) => {
+                if (q.id === id) {
+                    if (name === 'answers' && index !== null) {
+                        const updatedAnswers = [...q.answers];
+                        updatedAnswers[index] = value;
+                        return { ...q, answers: updatedAnswers };
+                    }
+                    if (name==='content'){
+                        return { ...q, ['cotents']: value }
+                    }
+                    return { ...q, [name]: value };
+                }
+                return q;
+            }),
         }));
     };
 
@@ -318,78 +142,102 @@ const OrderPanel = () => {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Submit panel details to the backend (example API endpoint)
-        await fetch('/api/panels', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(panelDetails),
-        });
-
-        // Reset the panel form after submission if needed
-        setPanelDetails({
-            name: '',
-            description: '',
-            numsOfParticipants: 1000,
-            questions: [],
-        });
+    const addAnswer = (questionId) => {
+        setPanelDetails((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId
+                    ? { ...q, answers: [...q.answers, ''] }
+                    : q
+            ),
+        }));
     };
 
-    return (
-        <div className="order-panel">
-            <h2>Create Panel Order</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="p-field">
-                    <label htmlFor="name">Panel Name</label>
-                    <InputText
-                        id="name"
-                        name="name"
-                        value={panelDetails.name}
-                        onChange={handlePanelChange}
-                        required
-                    />
-                </div>
+    const removeAnswer = (questionId, index) => {
+        setPanelDetails((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId
+                    ? { ...q, answers: q.answers.filter((_, i) => i !== index) }
+                    : q
+            ),
+        }));
+    };
 
-                <div className="p-field">
-                    <label htmlFor="description">Description</label>
-                    <InputTextarea
-                        id="description"
-                        name="description"
-                        value={panelDetails.description}
-                        onChange={handlePanelChange}
-                        rows={3}
-                    />
-                </div>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(panelDetails);
 
-                <div className="p-field">
-                    <label htmlFor="numsOfParticipants">Number of Participants</label>
-                    <InputText
-                        id="numsOfParticipants"
-                        value={panelDetails.numsOfParticipants}
-                        onChange={(e) => handlePanelChange({ target: { name: 'numsOfParticipants', value: e.target.value } })}
-                    />
-                </div>
+            const res = await axios.post('http://localhost:1135/panel', panelDetails, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        navigate('/customer');
+            console.log(res);
+        } catch (error) {
+            console.error('Submission error:', error);
+            const errorMessage = error.response ? error.response.data.message : 'An error occurred during the submission.';
+            toast.current.show({ severity: 'error', summary: 'Request Failed', detail: errorMessage });
+        }
 
-                <Button label="Add Question" onClick={addQuestion} style={{ margin: '10px 0' }} />
+    };
+        return (
 
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {panelDetails.questions.map((question) => (
-                        <QuestionCard
-                            key={question.id}
-                            question={question}
-                            onChange={handleQuestionChange}
-                            onRemoveQuestion={removeQuestion}
-                        />
-                    ))}
-                </div>
-
-                <Button label="Submit Panel Order" type="submit" />
-            </form>
+    <div className="order-panel">
+    <h2>Create Panel Order</h2>
+    <form onSubmit={handleSubmit}>
+        <div className="p-field">
+            <label htmlFor="name">Panel Name</label>
+            <InputText
+                id="name"
+                name="name"
+                value={panelDetails.name}
+                onChange={handlePanelChange}
+                required
+            />
         </div>
-    );
+
+        <div className="p-field">
+            <label htmlFor="description">Description</label>
+            <InputText
+                id="description"
+                name="description"
+                value={panelDetails.description}
+                onChange={handlePanelChange}
+                rows={3}
+            />
+        </div>
+
+        <div className="p-field">
+            <label htmlFor="numsOfParticipants">Number of Participants</label>
+            <InputText
+                id="numsOfParticipants"
+                value={panelDetails.numsOfParticipants}
+                onChange={(e) => handlePanelChange({ target: { name: 'numsOfParticipants', value: e.target.value } })}
+            />
+        </div>
+
+        <Button label="Add Question" type="button" onClick={addQuestion} style={{ margin: '10px 0' }} />
+
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {panelDetails.questions.map((question) => (
+                <QuestionCard
+                    key={question.id}
+                    question={question}
+                    onChange={handleQuestionChange}
+                    onRemoveQuestion={removeQuestion}
+                    onAddAnswer={addAnswer}
+                    onRemoveAnswer={removeAnswer}
+                />
+            ))}
+        </div>
+
+        <Button label="Submit Panel Order" type="submit" />
+    </form>
+    <Toast ref={toast} />
+</div>
+);
 };
 
-export default OrderPanel
+export default OrderPanel;
+
