@@ -3,22 +3,23 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
-import { ProductService } from './ProductService';
+import { CustomerPanelService } from './CustomerPanelService';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 export default function PanelList() {
     const [panels, setPanels] = useState([]);
     const { token } = useSelector((state) => state.token);
-    const navigate = useNavigate(); // Use navigate hook
-  
+    const { userInfo } = useSelector((state) => state.token);
+
+    const navigate = useNavigate();
     useEffect(() => {
-        ProductService.getPanels(token).then((data) => setPanels(data));
-    }, [token]); // Add token to dependency array
+        CustomerPanelService.getPanels(token, userInfo).then((data) => setPanels(data));
+    }, [token, userInfo]);
 
     const itemTemplate = (data) => {
         const handleButtonClick = () => {
-            console.log(data.name);
-            navigate(`/panel/${data.name}`, { state: { someProp: data } }); // Replace with your target route and parameter
+            console.log(data);
+            navigate(`/analizePanel`, { state: { someProp: data } }); // Replace with your target route and parameter
         };
 
         return (
@@ -31,13 +32,13 @@ export default function PanelList() {
                             </div>
                             <div className="flex flex-column gap-2">
                                 <span className="flex align-items-center gap-2">
-                                    <i className="pi pi-chart-bar product-category-icon"></i>
-                                    <span className="font-semibold">{data.questions.length} questions</span>
+                                    <i className="pi pi-user product-category-icon"></i>
+                                    <span className="font-semibold">{data.questions[0].userAnswers.length} participants</span>
                                 </span>
                             </div>
                         </div>
                         <div className="flex flex-row lg:flex-column align-items-start" style={{ height: '100%' }}>
-                            <div className="description" style={{ 
+                            <div className="description" style={{
                                 minHeight: '100px',
                                 maxHeight: '100px',
                                 overflow: 'auto',
@@ -50,8 +51,7 @@ export default function PanelList() {
                             </div>
                         </div>
                         <div className="flex flex-row lg:flex-column align-items-center lg:align-items-end gap-6 lg:gap-2">
-                            <span className="text-2xl font-semibold">{data.score} points</span>
-                            <Button icon="pi pi-comments" label="To participate" onClick={handleButtonClick} disabled={data.inventoryStatus === 'OUTOFSTOCK'} />
+                            <Button icon="pi pi-chart-bar" label="To whach analize" onClick={handleButtonClick} disabled={data.inventoryStatus === 'OUTOFSTOCK'} />
                         </div>
                     </div>
                 </div>

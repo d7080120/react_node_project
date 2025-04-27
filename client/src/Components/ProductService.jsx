@@ -2,15 +2,20 @@ import axios from 'axios';
 let panels = [];
 export const ProductService = {
     async getPanelsData(token) {
-        console.log(token);
+        try {
+            console.log(token);
 
-        const res = await axios.get('http://localhost:1135/panel',
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        if(res.status===200)
-        panels = res.data
-        console.log(panels);
-        return panels;
+            const res = await axios.get('http://localhost:1135/panel',
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
+            if (res.status === 200)
+                panels = res.data
+            console.log(panels);
+            return panels;
+
+        } catch (e) {
+            return []
+        }
     },
 
 

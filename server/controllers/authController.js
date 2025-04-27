@@ -29,8 +29,10 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
         userInfo.customer = {
+            _id:foundCustomer._id,
             phone: foundCustomer.phone,
-            panels: [...foundCustomer.panels]
+            panels: [...foundCustomer.panels],
+            
         }
     }
     if (foundUser.roles.find(r => r === "Participant")) {
@@ -40,18 +42,16 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
         userInfo.participant = {
+            _id:foundParticipant._id,
             phone: foundParticipant.phone,
-            dateOfBirth: { ...foundParticipant.dateOfBirth },
+            dateOfBirth: foundParticipant.dateOfBirth ,
             address: { ...foundParticipant.address },
             score: foundParticipant.score,
             gender: foundParticipant.gender
         }
-    }
-
+      }
     const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
     res.json({ accessToken: accessToken ,userInfo:userInfo})
-
-    // res.send("Logged In")
 
 }
 const registerParticipant = async (req, res) => {

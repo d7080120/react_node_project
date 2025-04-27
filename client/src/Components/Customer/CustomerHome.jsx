@@ -19,15 +19,11 @@ function CustomerHome() {
                     style={{ marginBottom: '10px', width: '100%' }}
                 />
                 <Button
-                    label="Go to Component B"
-                    onClick={() => handleButtonClick('/component-b')}
+                    label="analize of your panels"
+                    onClick={() => handleButtonClick('/customerPanels')}
                     style={{ marginBottom: '10px', width: '100%' }}
                 />
-                <Button
-                    label="Go to Component C"
-                    onClick={() => handleButtonClick('/component-c')}
-                    style={{ marginBottom: '10px', width: '100%' }}
-                />
+               
             </div>
         </Card>
     );

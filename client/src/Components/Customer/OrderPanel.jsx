@@ -1,30 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
@@ -95,7 +69,7 @@ const OrderPanel = () => {
         description: '',
         numsOfParticipants: 1000,
         questions: [],
-        customer:userInfo._id
+        customer:userInfo.customer
     });
 
     const handlePanelChange = (e) => {
@@ -107,7 +81,7 @@ const OrderPanel = () => {
     };
 
     const addQuestion = () => {
-        const newQuestion = { id: Date.now(), title: '', cotents: '', answers: [''] ,userAnswewrs:[]};
+        const newQuestion = { id: Date.now(), title: '', cotents: '', answers: [''] ,userAnswewrs:[], questionType:'680e4aa1fa7cb5ca5a3ebd6f'};
         setPanelDetails((prev) => ({
             ...prev,
             questions: [...prev.questions, newQuestion],
@@ -165,6 +139,7 @@ const OrderPanel = () => {
     };
 
     const handleSubmit = async (e) => {
+        console.log(userInfo)
         e.preventDefault();
         try {
             console.log(panelDetails);

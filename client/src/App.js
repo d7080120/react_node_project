@@ -19,6 +19,8 @@ import PanelList from './Components/PanelList';
 import Panel from './Components/Panel';
 import CustomerHome from './Components/Customer/CustomerHome';
 import OrderPanel from './Components/Customer/OrderPanel';
+import ViewPanels from './Components/Customer/ViewPanels';
+import AnalizePanel from './Components/Customer/AnalizePanel';
 
 const UserContext = createContext();
 
@@ -35,7 +37,9 @@ function App() {
         <Routes>
           {/* <UpdateUser user={user}/> */}
           <Route path='/participant' element={<PanelList />} />
+          <Route path='/analizePanel' element={<AnalizePanel />} />
           <Route path='/customer' element={<CustomerHome />} />
+          <Route path='/customerPanels' element={<ViewPanels />} />
           <Route path='/orderpanel' element={<OrderPanel/>} />
           <Route path='/panel/:name' element={<Panel />} />
           <Route path='/home' element={<Login />} />
