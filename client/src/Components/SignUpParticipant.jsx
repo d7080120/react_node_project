@@ -28,8 +28,8 @@ export default function SignUpParticipant({ setVisible, visible }) {
     const options = ['Female', 'Male'];
     const [value, setValue] = useState(options[0]);
     const [gender, setGender] = useState('Female')
-    const [city,setCity]=useState('')
-    const [filteredCountries, setFilteredCountries] = useState(null);
+    const [city, setCity] = useState('')
+    const [filteredCountries, setFilteredCountries] = useState([...cities]);
     const search = (event) => {
         setTimeout(() => {
             let _filteredCountries;
@@ -96,6 +96,11 @@ export default function SignUpParticipant({ setVisible, visible }) {
         // const data =  formData
         data.gender = gender
         data.city = data.city.city
+        const isValidCity = filteredCountries.some(country => country.city === data.city);
+        if (!isValidCity) {
+            toast.current.show({ severity: 'error', summary: 'Submit Failed', detail: "You Shold choose the city from the list" });
+            return
+        }
         // data.city =city
 
         console.log(gender);
@@ -246,7 +251,8 @@ export default function SignUpParticipant({ setVisible, visible }) {
                                                         value={field.value} // Bind the controller value to AutoComplete
                                                         suggestions={filteredCountries}
                                                         completeMethod={search}
-                                                        onChange={(e) => {field.onChange(e.value)
+                                                        onChange={(e) => {
+                                                            field.onChange(e.value)
                                                             // { (e) => { if (filteredCountries.find((f) =>  f === e.value))  { field.onChange("") } else { field.onChange(e.value); } } }
                                                             // Set value to react-hook-form
                                                         }}

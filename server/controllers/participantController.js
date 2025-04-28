@@ -23,9 +23,10 @@ const getParticipantById = async (req, res) => {
 
 const updateParticipant = async (req, res) => {
 
-    const{ username, name, email, roles, active}=req.user
+    const{ username, name, email, roles}=req.user
     const { address, phone,  gender ,_id} = req.body
     let {score,date}=req.body
+    const active=true;
     score=parseInt(score, 10)
     date=new Date(date)
     console.log(date);

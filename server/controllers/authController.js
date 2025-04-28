@@ -12,11 +12,17 @@ const login = async (req, res) => {
     }
     console.log(username)
     const foundUser = await User.findOne({ username }).lean()
+    console.log(foundUser.active);
+
     if (!foundUser || !foundUser.active) {
+
         return res.status(401).json({ message: 'Unauthorized' })
     }
+
     const match = await bcrypt.compare(password, foundUser.password)
+
     if (!match) return res.status(401).json({ message: 'Unauthorized' })
+
     const userInfo = {
         _id: foundUser._id, name: foundUser.name,
         roles: foundUser.roles, username: foundUser.username,
@@ -36,7 +42,6 @@ const login = async (req, res) => {
         }
     }
     if (foundUser.roles.find(r => r === "Participant")) {
-
         const foundParticipant = await Participant.findOne({ user: foundUser._id })
         if (!foundParticipant) {
             return res.status(401).json({ message: 'Unauthorized' })
