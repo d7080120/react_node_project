@@ -51,7 +51,7 @@ const sendEmails=()=>{
 
     // Create a transporter object using your email service configuration
     let transporter = nodemailer.createTransport({
-        host: "smtp.mby.co.il", // Replace with your email provider's SMTP server
+        host: "smtp.gmail.com", // Replace with your email provider's SMTP server
         port: 587, // Commonly 587 for TLS
         secure: false, // true for 465, false for other ports
         auth: {

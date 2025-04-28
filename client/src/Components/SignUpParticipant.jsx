@@ -6,7 +6,7 @@ import { InputMask } from "primereact/inputmask";
 import cities from '../data/cities.json'
 import { AutoComplete } from "primereact/autocomplete";
 import { InputNumber } from 'primereact/inputnumber';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -18,12 +18,17 @@ import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import { SelectButton } from 'primereact/selectbutton';
+import { Toast } from 'primereact/toast';
+
 import UserContext from '../App'
 export default function SignUpParticipant({ setVisible, visible }) {
     const user = useContext(UserContext);
+    const toast = useRef(null);
+
     const options = ['Female', 'Male'];
     const [value, setValue] = useState(options[0]);
     const [gender, setGender] = useState('Female')
+    const [city,setCity]=useState('')
     const [filteredCountries, setFilteredCountries] = useState(null);
     const search = (event) => {
         setTimeout(() => {
@@ -53,19 +58,22 @@ export default function SignUpParticipant({ setVisible, visible }) {
         date: null,
         city: null,
         accept: false,
-        gender:'Female'
+        gender: 'Female'
     }
     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
     const onSubmit = (data) => {
         console.log(data);
         setFormData(data);
         console.log(formData);
-        const sucsses=sign(data)
+        const sucsses = sign(data)
         console.log(sucsses);
         // if(sucsses){reset();setShowMessage(true);}
-        
-
     };
+    // const changeCity=(e)=>{
+    //     console.log(e,filteredCountries);
+    //     const field='city'
+    //     if (filteredCountries.find((f) =>  f === e.value))  { setCity('') } else { setCity(e.value);
+    // }}
     const getFormErrorMessage = (name) => {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
@@ -86,25 +94,33 @@ export default function SignUpParticipant({ setVisible, visible }) {
     const navigate = useNavigate();
     const sign = async (data) => {
         // const data =  formData
-        data.gender=gender
-        data.city=data.city.city
-console.log(gender);
-console.log(data);
+        data.gender = gender
+        data.city = data.city.city
+        // data.city =city
+
+        console.log(gender);
+        console.log(data);
         console.log(formData);
         try {
-            const res = await axios.post('http://localhost:1135/auth/registerParticipant',data)
-            console.log("res"+res);
-            reset();setShowMessage(true);
+            const res = await axios.post('http://localhost:1135/auth/registerParticipant', data)
+            console.log("res" + res);
+            reset(); setShowMessage(true);
+            setVisible(false)
+
             return true
         }
         catch (e) {
             if (e.status === 401)
                 if (JSON.parse(e.request.response).message === "All fields are required")
-                    alert("You Shold fill all the required fields")
-                if(e.status===409){
-                    alert("This username is exist choose another username")
-                    return false;
-                }
+                    toast.current.show({ severity: 'error', summary: 'Login Failed', detail: "You Shold fill all the required fields" });
+            if (e.status === 409) {
+                toast.current.show({ severity: 'error', summary: 'Login Failed', detail: "This username is exist choose another username" });
+                return false;
+            }
+            if (e.status === 400) {
+                toast.current.show({ severity: 'error', summary: 'Login Failed', detail: e.message });
+                return false;
+            }
         }
 
     }
@@ -230,9 +246,11 @@ console.log(data);
                                                         value={field.value} // Bind the controller value to AutoComplete
                                                         suggestions={filteredCountries}
                                                         completeMethod={search}
-                                                        onChange={(e) => {
-                                                            field.onChange(e.value); // Set value to react-hook-form
+                                                        onChange={(e) => {field.onChange(e.value)
+                                                            // { (e) => { if (filteredCountries.find((f) =>  f === e.value))  { field.onChange("") } else { field.onChange(e.value); } } }
+                                                            // Set value to react-hook-form
                                                         }}
+                                                        // onBlur={(e) => {changeCity(e)}}
                                                         dropdown
                                                         className={classNames({ 'p-invalid': fieldState.invalid })} // Apply class for styling if invalid
                                                     />
@@ -278,6 +296,7 @@ console.log(data);
                 )}
 
             ></Dialog>
+            <Toast ref={toast} />
 
 
         </div>

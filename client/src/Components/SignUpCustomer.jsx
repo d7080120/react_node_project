@@ -5,7 +5,7 @@ import { InputMask } from "primereact/inputmask";
 import cities from '../data/cities.json'
 import { AutoComplete } from "primereact/autocomplete";
 import { InputNumber } from 'primereact/inputnumber';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -16,10 +16,13 @@ import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
-import { SelectButton } from 'primereact/selectbutton';
+import { SelectButton } from 'primereact/selectbutton'; import { Toast } from 'primereact/toast';
+
+
 import UserContext from '../App'
 export default function SignUpParticipant({ setVisible, visible }) {
     const user = useContext(UserContext);
+    const toast = useRef(null);
     const [filteredCountries, setFilteredCountries] = useState(null);
     const search = (event) => {
         setTimeout(() => {
@@ -78,14 +81,16 @@ export default function SignUpParticipant({ setVisible, visible }) {
             const res = await axios.post('http://localhost:1135/auth/registerCustomer', data)
             console.log("res" + res);
             reset(); setShowMessage(true);
+            setVisible(false)
             return true
         }
         catch (e) {
             if (e.status === 401)
                 if (JSON.parse(e.request.response).message === "All fields are required")
-                    alert("You Shold fill all the required fields")
+                    toast.current.show({ severity: 'error', summary: 'Login Failed', detail: "You Shold fill all the required fields" });
             if (e.status === 409) {
-                alert("This username is exist choose another username")
+                toast.current.show({ severity: 'error', summary: 'Login Failed', detail: "This username is exist choose another username" });
+
                 return false;
             }
         }
@@ -189,7 +194,7 @@ export default function SignUpParticipant({ setVisible, visible }) {
                 )}
 
             ></Dialog>
-
+            <Toast ref={toast} />
 
         </div>
     )

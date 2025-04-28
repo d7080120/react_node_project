@@ -28,7 +28,8 @@ function App() {
   const [user, setUser] = useState({});
   const location = useLocation();
   const noNavbarPaths = ['/home', '/signup', '/panel']
-  const shouldShowNavbar = !noNavbarPaths.some(path => location.pathname.startsWith(path))
+  const shouldShowNavbar = !noNavbarPaths.some(path => location.pathname.startsWith(path))&&!(location.pathname.substring(1)==='')
+
   return (
     <UserContext.Provider value={user}>
       <div className="App">
@@ -36,6 +37,8 @@ function App() {
         {shouldShowNavbar && <NavBar />}
         <Routes>
           {/* <UpdateUser user={user}/> */}
+          <Route path='/' element={<Login />} />
+
           <Route path='/participant' element={<PanelList />} />
           <Route path='/analizePanel' element={<AnalizePanel />} />
           <Route path='/customer' element={<CustomerHome />} />

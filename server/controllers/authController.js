@@ -58,7 +58,6 @@ const registerParticipant = async (req, res) => {
     const { username, password, name, email, phone,  city,address, date, gender } = req.body
     // if (!name || !username || !password || !email || !phone || !country || !city || !street || !build || !apartment || !date || !gender) {// Confirm data
     if (!name || !username || !password || !email || !phone ||  !city || !date || !gender) {// Confirm data
-
         return res.status(400).json({ message: 'All fields are required' })
     }
     const duplicate = await User.findOne({ username: username }).lean()
@@ -67,6 +66,7 @@ const registerParticipant = async (req, res) => {
     }
     const hashedPwd = await bcrypt.hash(password, 10)
     const userObject = { name, email, username, active: true, password: hashedPwd, roles: ["Participant"] }
+
     const user = await User.create(userObject)
 
     if (!user) {
