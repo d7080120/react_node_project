@@ -1,6 +1,7 @@
 const Panel = require("../models/Panel");
 const Cost = require("../models/Cost");
 const Customer = require("../models/Customer");
+const User = require("../models/User")
 
 const calculateCostAndScore = async (questions, numsOfParticipants) => {
     const costs = await Cost.find().lean()
@@ -46,8 +47,10 @@ const calculateCostAndScore = async (questions, numsOfParticipants) => {
     return ansObj
 
 }
-const sendEmails=()=>{
+
+const sendEmails=(user,panel)=>{
     const nodemailer = require('nodemailer');
+    console.log("Mail Options:", user,panel);
 
     // Create a transporter object using your email service configuration
     let transporter = nodemailer.createTransport({
@@ -63,10 +66,11 @@ const sendEmails=()=>{
     // Set up email data
     let mailOptions = {
         from: process.env.EMAIL, // Sender address
-        to: "38327856894@mby.co.il",                      // List of receivers
-        subject: "Hello ✔",                               // Subject line
-        text: "Hello World?",                             // Plain text body
-        html: "<b>Hello World?</b>"                       // HTML body
+        to: user.email,                      // List of receivers
+        subject: "new panel for you 😘",                               // Subject line
+        text: `hello ${user.name} you can participant in a new pannel\n you can accumlate ${panel.score} points to participant`,                             // Plain text body
+        html:`<h3>hello ${user.name} you can participant in a new pannel\n you can accumlate ${panel.score} points to participant<h3/><a href="http://localhost:3000" target="_blank">Click here</a>` 
+        // HTML body
     };
     
     // Send the email
@@ -100,8 +104,9 @@ const createPanel = async (req, res) => {
 
             const updateCustomer=await customerPanel.save()
             console.log(updateCustomer)
-    sendEmails()
-
+            const users = await User.find({ roles: { $in: ["Participant"] } }).lean();
+            console.log(users);
+            users.forEach((u)=>{sendEmails(u,panel)})
             return res.status(201).json({
                 message: 'New panel created',
                 panel: panels

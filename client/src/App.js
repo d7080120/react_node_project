@@ -24,6 +24,21 @@ import AnalizePanel from './Components/Customer/AnalizePanel';
 
 const UserContext = createContext();
 
+const navbarStyle = {
+  position: 'fixed', // קבוע בראש הדף
+  top: 0, // מתאים למעלה
+  left: 0, // מתאים לקצה השמאלי
+  width: '100%', // רוחב מלא של הדף
+  zIndex: 1000, // מבטיח שהוא יהיה מעל כל האלמנטים האחרים
+  backgroundColor: '#ffffff', // צבע רקע (ניתן לשנות לפי הצורך)
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // צל קל לשיפור נראות
+  padding: '10px 20px', // ריווח פנימי
+};
+
+// סגנון לתוכן הדף כדי למנוע חפיפה עם התפריט הקבוע
+const contentStyle = {
+  paddingTop: '70px', // התאמה לגובה התפריט
+};
 function App() {
   const [user, setUser] = useState({});
   const location = useLocation();
@@ -34,7 +49,10 @@ function App() {
     <UserContext.Provider value={user}>
       <div className="App">
         {/* <Login/> */}
-        {shouldShowNavbar && <NavBar />}
+        {/* {shouldShowNavbar && <NavBar />} */}
+        {shouldShowNavbar && <NavBar style={navbarStyle} />}
+        <div style={contentStyle}>
+
         <Routes>
           {/* <UpdateUser user={user}/> */}
           <Route path='/' element={<Login />} />
@@ -49,6 +67,8 @@ function App() {
           <Route path='/signUp' element={<SingUp />} />
         </Routes>
       </div>
+      </div>
+
     </UserContext.Provider>
   );
 }

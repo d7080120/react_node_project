@@ -4,19 +4,24 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
+import { setToken, setUser } from '../redux/tokenSlice';
+import { Message } from 'primereact/message';
+import StartPanel from './StartPanel';
+
 function Panel() {
     const [selectedAnswer, setSelectedAnswer] = useState('');
     const [answers, setAnswers] = useState([])
     const [closeDisable, setCloseDisable] = useState(false)
-    const [num, setNum] = useState(0);
+    const [num, setNum] = useState(-1);
     const [escore, setScore] = useState(0);
     const location = useLocation();
     const panel = location.state.someProp;
     const questions = panel.questions;
     const { token } = useSelector((state) => state.token);
     const { userInfo } = useSelector((state) => state.token);
+    const dispatch = useDispatch();
 
     console.log(closeDisable)
     const handleAnswerChange = (answer) => {
@@ -33,7 +38,7 @@ function Panel() {
         setNum(num + 1);
         setSelectedAnswer('');
     };
-    const  toast  = useRef(null)
+    const toast = useRef(null)
     const [visible, setVisible] = useState(false);
     const saveAnswers = async () => {
         setCloseDisable(true)
@@ -66,7 +71,9 @@ function Panel() {
             updateParticipant.score = userInfo.participant.score + escore
             updateParticipant.date = userInfo.participant.dateOfBirth
             console.log(updateParticipant)
-
+            const UpUserInfo = { ...userInfo }
+            UpUserInfo.participant = updateParticipant
+            dispatch(setUser(UpUserInfo));
             const res = await axios.put(
                 'http://localhost:1135/participant', // כתובת ה-API
                 // גוף הבקשה (body)
@@ -83,33 +90,46 @@ function Panel() {
             }
         } catch (error) {
             setCloseDisable(false)
-            toast.current.show({ severity: 'error', summary: 'Failed to add points'});
+            toast.current.show({ severity: 'error', summary: 'Failed to add points' });
 
             console.error("Error saving answers:", error.response?.data || error.message);
         }
 
     }
     return (
-        <>    <div>
-            {num < questions.length ? (
-                <Question
-                    question={questions[num]}
-                    onAnswerChange={handleAnswerChange}
-                    selectedAnswer={selectedAnswer}
-                    onSave={handleSave}
-                    onNext={handleNext}
-                />
-            ) : (
-                <>
-                    <Toast ref={toast} />
-                    <div style={{ textAlign: 'center', padding: '2rem', background: '#f9f9f9', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-                        <h3 style={{ color: '#4CAF50', marginBottom: '1rem' }}>All questions are completed!</h3>
-                        <Button label="Exit and Add Points" icon="pi pi-check" disabled={closeDisable} onClick={saveAnswers} className="p-button-success" />
-                    </div>
-                </>
+        <>
+            {num === -1 ?(
+                <StartPanel panel setNum={setNum}/>
+                // <>
+                //     hello {userInfo.name}
+                //     We invite you to take part in the new survey: {panel.name}
+                //     {panel.description}
+                //     <Message severity="warn" text="if you will refresh the page in the pannel you will turn to the start" />
+                //     <Button label="start the panel"   onClick={()=>{setNum(0)}} className="p-button-success" />
 
-            )}
-        </div>
+                // </>
+                ): (<></>)}
+            <div>
+                {num > -1 && num < questions.length ? (
+                    <Question
+                        question={questions[num]}
+                        onAnswerChange={handleAnswerChange}
+                        selectedAnswer={selectedAnswer}
+                        onSave={handleSave}
+                        onNext={handleNext}
+                    />
+                ) : (
+                    <>
+                       
+                    </>
+
+                )}
+                {num >= questions.length ?(<> <Toast ref={toast} />
+                        <div style={{ textAlign: 'center', padding: '2rem', background: '#f9f9f9', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+                            <h3 style={{ color: '#4CAF50', marginBottom: '1rem' }}>All questions are completed!</h3>
+                            <Button label="Exit and Add Points" icon="pi pi-check" disabled={closeDisable} onClick={saveAnswers} className="p-button-success" />
+                        </div></>):(<></>)}
+            </div>
             <Button label="scores from this panel" icon="pi pi-external-link" onClick={() => setVisible(true)} />
             <Dialog header="Your score" visible={visible} onHide={() => { if (!visible) return; setVisible(false); }}
                 style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }}>
