@@ -65,16 +65,16 @@ export default function QuestionAnalysisCharts({ question }) {
                 {
                     data: Object.values(answerCounts).map(Math.floor), // Use whole numbers
                     backgroundColor: [
-                        '#42A5F5',
-                        '#66BB6A',
-                        '#FFA726',
-                        '#EF5350'
+                        'rgba(255, 159, 64, 0.4)',
+                        'rgba(75, 192, 192, 0.4)',
+                        'rgba(54, 162, 235, 0.4)',
+                        'rgba(153, 102, 255, 0.4)'
                     ],
                     hoverBackgroundColor: [
-                        '#2196F3',
-                        '#43A047',
-                        '#FF9800',
-                        '#F44336'
+                        'rgb(255, 159, 64)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)'
                     ]
                 }
             ]

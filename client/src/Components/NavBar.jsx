@@ -1,73 +1,60 @@
-// import React from 'react';
-// import { Menubar } from 'primereact/menubar';
-// import { InputText } from 'primereact/inputtext';
-// import { Badge } from 'primereact/badge';
-// import { Avatar } from 'primereact/avatar';  
-// import { useNavigate } from 'react-router-dom';
-
-// export default function NavBar() {
-//     const navigate = useNavigate();
-
-//     const itemRenderer = (item) => (
-//         <a className="flex align-items-center p-menuitem-link">
-//             <span className={item.icon} />
-//             <span className="mx-2">{item.label}</span>
-//             {item.badge && <Badge className="ml-auto" value={item.badge} />}
-//             {item.shortcut && <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{item.shortcut}</span>}
-//         </a>
-//     );
-//     const items = [
-//         {
-//             label: 'Login',
-//             icon: 'pi pi-home',
-//             command:()=>{
-//                 navigate('/home')
-//             } 
-//         }
-//     ];
-
-//     // const start = <img alt="logo" src="https://primefaces.org/cdn/primereact/images/logo.png" height="40" className="mr-2"></img>;
-//     // const end = (
-//     //     <div className="flex align-items-center gap-2">
-//     //         <InputText placeholder="Search" type="text" className="w-8rem sm:w-auto" />
-//     //         <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" />
-//     //     </div>
-//     // );
-
-//     return (
-//         <div className="card">
-//             <Menubar model={items} />
-//         </div>
-//     )
-// }
-        
-import React, { useContext } from 'react';
+import React from 'react';
 import { Menubar } from 'primereact/menubar';
-import { Avatar } from 'primereact/avatar';  
+import { Avatar } from 'primereact/avatar';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-// נניח שיש לך context למשתמש
-import { UserContext } from '../App';
+// Importing the image
+import panelImage from '../image.png'; // Adjust the path as per your directory structure
 
 export default function NavBar() {
     const navigate = useNavigate();
     const { userInfo } = useSelector((state) => state.token);
-    const userName = userInfo.name // קבלת שם המשתמש מתוך context
+    const userName = userInfo.name; // User's name from context/state
+    const userParticipant = userInfo.roles.find((r) => r === 'Participant')
+    const userCustomer = userInfo.roles.find((r) => r === 'Customer')
 
-    const items = [
+    const logout = {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: () => {
+            navigate('/');
+        }
+    }
+
+    const start = (
+        <img
+            alt="Panels Logo"
+            src={panelImage}
+            height="40"
+            className="mr-2"
+        />
+    );
+
+    const participantItems = [
         {
             label: 'Home',
             icon: 'pi pi-home',
             command: () => {
-                navigate('/home');
+                navigate('/participant');
             }
         },
         {
             label: 'Panels',
             icon: 'pi pi-list',
             command: () => {
-                navigate('/customerPanels');
+                navigate('/participant');
+            }
+        },
+        logout
+    ];
+
+    const customerItems = [
+        {
+            label: 'Home',
+            icon: 'pi pi-home',
+            command: () => {
+                navigate('/customer');
             }
         },
         {
@@ -81,39 +68,28 @@ export default function NavBar() {
             label: 'Analyze Panel',
             icon: 'pi pi-chart-bar',
             command: () => {
-                navigate('/analizePanel');
+                navigate('/customerPanels');
             }
         },
-        {
-            label: 'Logout',
-            icon: 'pi pi-sign-out',
-            command: () => {
-                navigate('/home');
-            }
-        }
+        logout
     ];
-
-    const start = (
-        <img 
-            alt="logo" 
-            src="https://primefaces.org/cdn/primereact/images/logo.png" 
-            height="40" 
-            className="mr-2"
-        />
-    );
 
     const end = (
         <div className="flex align-items-center gap-2">
-            {/* שם המשתמש */}
             <span>Hello, {userName}</span>
-            {/* אווטאר */}
             <Avatar label={userName[0]} shape="circle" />
         </div>
     );
 
     return (
-        <div style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000 }}>
-            <Menubar model={items} start={start} end={end} />
+        <div style={{ position: 'fixed',
+            top: 0,
+            width: '99vw', // Use viewport width
+            left: 0, // Make sure it starts from the leftmost edge
+            zIndex: 1000,
+            boxSizing: 'border-box'}}>
+            {userCustomer && <Menubar model={customerItems} start={start} end={end} />}
+            {userParticipant && <Menubar model={participantItems} start={start} end={end} />}
         </div>
     );
 }
