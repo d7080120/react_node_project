@@ -2,13 +2,14 @@ import React, { useState, useRef } from 'react';
 import Question from './Question';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast } from 'primereact/toast';
 import { setToken, setUser } from '../redux/tokenSlice';
 import { Message } from 'primereact/message';
 import StartPanel from './StartPanel';
+import { useNavigate } from 'react-router-dom';
 
 function Panel() {
     const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -22,6 +23,7 @@ function Panel() {
     const { token } = useSelector((state) => state.token);
     const { userInfo } = useSelector((state) => state.token);
     const dispatch = useDispatch();
+    const navigate = useNavigate(); // Use navigate hook
 
     console.log(closeDisable)
     const handleAnswerChange = (answer) => {
@@ -87,6 +89,7 @@ function Panel() {
 
             if (res.status === 200) {
                 toast.current.show({ severity: 'success', summary: 'Success', detail: 'Your answers have been saved!', life: 3000 });
+                navigate('/participant')
             }
         } catch (error) {
             setCloseDisable(false)
@@ -99,15 +102,8 @@ function Panel() {
     return (
         <>
             {num === -1 ?(
-                <StartPanel panel setNum={setNum}/>
-                // <>
-                //     hello {userInfo.name}
-                //     We invite you to take part in the new survey: {panel.name}
-                //     {panel.description}
-                //     <Message severity="warn" text="if you will refresh the page in the pannel you will turn to the start" />
-                //     <Button label="start the panel"   onClick={()=>{setNum(0)}} className="p-button-success" />
-
-                // </>
+                <StartPanel panel={panel} setNum={setNum}/>
+       
                 ): (<></>)}
             <div>
                 {num > -1 && num < questions.length ? (

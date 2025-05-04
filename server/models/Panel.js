@@ -10,7 +10,7 @@ const panelSchema = new mongoose.Schema({
         type: [{
             title: { type: String, required: true },
             questionType: { type: mongoose.ObjectId, ref: 'Cost' },
-            cotents: { type: String, required: true },
+            content: { type: String, required: true },
             answers: [String],
             userAnswers: 
                 [

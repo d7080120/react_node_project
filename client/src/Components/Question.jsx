@@ -37,7 +37,7 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
             </div>
             <br />
             <div style={{ fontWeight: 'bold' }}>
-                {question.cotents}
+                {question.content}
             </div>
             {question.answers.map((answer, index) => (
                 <div key={index} style={{ textAlign: 'left', wordWrap: 'break-word' }}> {/* Left align and wrap words */}

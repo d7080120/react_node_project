@@ -7,7 +7,6 @@ export default function QuestionAnalysisCharts({ question }) {
     const [barChartOptions, setBarChartOptions] = useState({});
     const [pieChartData, setPieChartData] = useState({});
     const [pieChartOptions, setPieChartOptions] = useState({});
-
     useEffect(() => {
         console.log(question);
         // Count occurrences of each answer based on userAnswers
@@ -101,7 +100,7 @@ export default function QuestionAnalysisCharts({ question }) {
     return (
         <div className="card">
             <h1>{question.title}</h1>
-            <h3>{question.cotents}</h3>
+            <h3>{question.content}</h3>
             <h3>{question.userAnswers.length} participants in this question</h3>
 
             <div className="flex justify-content-between" style={{ height: '400px' }}>
