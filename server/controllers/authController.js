@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require("../models/User")
 const Participant = require("../models/Participant")
 const Customer = require("../models/Customer")
+const Panel = require("../models/Panel")
 
 
 const login = async (req, res) => {
@@ -12,7 +13,6 @@ const login = async (req, res) => {
     }
     console.log(username)
     const foundUser = await User.findOne({ username }).lean()
-    console.log(foundUser.active);
 
     if (!foundUser || !foundUser.active) {
 

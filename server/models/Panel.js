@@ -55,8 +55,12 @@ const panelSchema = new mongoose.Schema({
     },
     name: { type: mongoose.Schema.Types.String, required: true },
     description: { type: mongoose.Schema.Types.String, default: "" },
-    enable: { type: mongoose.Schema.Types.Boolean, default: true }
+    enable: { type: mongoose.Schema.Types.Boolean, default: true },
+    listParticipans:{
+        type:[{ type: mongoose.ObjectId, ref: 'Participant' }],
+        default: []
 
+    }
 
 }, {
     timestamps: true

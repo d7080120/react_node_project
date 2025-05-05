@@ -76,7 +76,7 @@ export default function NavBar() {
 
     const end = (
         <div className="flex align-items-center gap-2">
-            <span>Hello, {userName}</span>
+            <span>Hello {userName}</span>
             <Avatar label={userName[0]} shape="circle" />
         </div>
     );

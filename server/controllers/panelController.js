@@ -122,7 +122,11 @@ const createPanel = async (req, res) => {
 }
 
 const getAllPanels = async (req, res) => {
-    const panels = await Panel.find().lean()
+    const user=req.user
+    console.log(user);
+    const panels = await Panel.find({
+        listParticipans: { $nin: [user._id] },enable:true
+    }).lean()
     if (!panels?.length) {
         return res.status(400).json({ message: 'No panels found' })
     }
@@ -146,6 +150,10 @@ const addAnswer=async (req,res)=>{
         quest.userAnswers.push({body:ans.answer,participant})
     });
     panel.questions = [...questions]
+    panel.listParticipans=[...panel.listParticipans,participant]
+    if(panel.listParticipans.length>=panel.numsOfParticipants){
+        panel.enable=false
+    }
     console.log(typeof panel);
     const updatedPanel = await panel.save()
     res.json(answers)
