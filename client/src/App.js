@@ -22,60 +22,6 @@ import OrderPanel from './Components/Customer/OrderPanel';
 import ViewPanels from './Components/Customer/ViewPanels';
 import AnalizePanel from './Components/Customer/AnalizePanel';
 
-
-// const navbarStyle = {
-//   position: 'fixed', // קבוע בראש הדף
-//   top: 0, // מתאים למעלה
-//   left: 0, // מתאים לקצה השמאלי
-//   width: '100%', // רוחב מלא של הדף
-//   zIndex: 1000, // מבטיח שהוא יהיה מעל כל האלמנטים האחרים
-//   backgroundColor: '#ffffff', // צבע רקע (ניתן לשנות לפי הצורך)
-//   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // צל קל לשיפור נראות
-//   padding: '10px 20px', // ריווח פנימי
-// };
-
-// סגנון לתוכן הדף כדי למנוע חפיפה עם התפריט הקבוע
-// const contentStyle = {
-//   paddingTop: '70px', // התאמה לגובה התפריט
-// };
-// const UserContext = createContext();
-
-// function App() {
-//   const [user, setUser] = useState({});
-//   const location = useLocation();
-//   const noNavbarPaths = ['/home', '/signup', '/panel']
-//   const shouldShowNavbar = !noNavbarPaths.some(path => location.pathname.startsWith(path))&&!(location.pathname.substring(1)==='')
-
-//   return (
-//     <UserContext.Provider value={user}>
-//       <div className="App">
-//         {/* <Login/> */}
-//         {/* {shouldShowNavbar && <NavBar />} */}
-//         {shouldShowNavbar && <NavBar  />}
-//         <div >
-
-//         <Routes>
-//           {/* <UpdateUser user={user}/> */}
-//           <Route path='/' element={<Login />} />
-
-//           <Route path='/participant' element={<PanelList />} />
-//           <Route path='/analizePanel' element={<AnalizePanel />} />
-//           <Route path='/customer' element={<CustomerHome />} />
-//           <Route path='/customerPanels' element={<ViewPanels />} />
-//           <Route path='/orderpanel' element={<OrderPanel/>} />
-//           <Route path='/panel/:name' element={<Panel />} />
-//           <Route path='/home' element={<Login />} />
-//           <Route path='/signUp' element={<SingUp />} />
-//         </Routes>
-//       </div>
-//       </div>
-
-//     </UserContext.Provider>
-//   );
-// }
-
-// export default App;
-
 const UserContext = createContext();
 
 function App() {
