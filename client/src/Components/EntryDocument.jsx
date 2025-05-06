@@ -20,6 +20,15 @@ try {
 } catch (error) {
     console.error('❌ שגיאה ברישום הפונט:', error);
 }
+const generateVoucherCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 10; i++) {
+        code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return code;
+};
+const voucherCode = generateVoucherCode();
 
 // עיצוב
 const styles = StyleSheet.create({
@@ -53,59 +62,6 @@ const styles = StyleSheet.create({
     },
 });
 
-// const MyDocument = () => {
-//     return (
-//         <Document>
-//             <Page size="A4" style={[styles.page, { border: '2px solid #4CAF50', padding: 20, borderRadius: 10 }]}>
-//                 <View>
-//                     {/* לוגו החברה */}
-//                     <Image
-//                         style={{ width: 150, alignSelf: 'center', marginBottom: 20 }}
-//                         src="../image.png" // החלף בנתיב לתמונה של לוגו
-//                     />
-
-//                     {/* כותרת */}
-//                     <Text style={[styles.text, { fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#4CAF50', marginBottom: 10 }]}>
-//                         Gift Voucher
-//                     </Text>
-
-//                     {/* תוכן */}
-//                     <Text style={[styles.text, { textAlign: 'center', fontSize: 18, marginBottom: 20 }]}>
-//                         Congratulations! This voucher entitles you to a purchase worth:
-//                     </Text>
-//                     <Text style={[styles.text, { fontSize: 36, fontWeight: 'bold', textAlign: 'center', color: '#FF5722', marginVertical: 20 }]}>
-//                         $50
-//                     </Text>
-
-//                     <Text style={[styles.text, { textAlign: 'center', fontSize: 16, marginBottom: 20 }]}>
-//                         Use this voucher at any of the participating stores listed below.
-//                     </Text>
-
-//                     {/* רשימת חנויות */}
-//                     <View style={{ marginVertical: 20, padding: 10, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#f9f9f9' }}>
-//                         <Text style={[styles.text, { fontWeight: 'bold', textAlign: 'center', fontSize: 16, color: '#333', marginBottom: 10 }]}>
-//                             Participating Stores:
-//                         </Text>
-//                         <Text style={[styles.text, { fontSize: 14, textAlign: 'center', marginBottom: 5 }]}>- Amazon</Text>
-//                         <Text style={[styles.text, { fontSize: 14, textAlign: 'center', marginBottom: 5 }]}>- Walmart</Text>
-//                         <Text style={[styles.text, { fontSize: 14, textAlign: 'center', marginBottom: 5 }]}>- Target</Text>
-//                         <Text style={[styles.text, { fontSize: 14, textAlign: 'center', marginBottom: 5 }]}>- Best Buy</Text>
-//                     </View>
-
-//                     {/* שורת תודה */}
-//                     <Text style={[styles.text, { textAlign: 'center', fontSize: 16, marginTop: 30, color: '#4CAF50' }]}>
-//                         Thank you for choosing our service!
-//                     </Text>
-
-//                     {/* הערות */}
-//                     <Text style={[styles.text, { marginTop: 20, fontSize: 10, textAlign: 'center', color: '#888' }]}>
-//                         Terms and conditions apply. This voucher is non-refundable and cannot be exchanged for cash.
-//                     </Text>
-//                 </View>
-//             </Page>
-//         </Document>
-//     );
-// };
 const MyDocument = ({ amount }) => {
     return (
         <Document>
@@ -134,6 +90,22 @@ const MyDocument = ({ amount }) => {
                         Use this voucher at any of the participating stores listed below.
                     </Text>
 
+                    {/* קוד שובר */}
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                color: '#FF5722',
+                                marginVertical: 20,
+                            },
+                        ]}
+                    >
+                        Voucher Code: {voucherCode}
+                    </Text>
+
                     {/* רשימת חנויות */}
                     <View style={{ marginVertical: 20, padding: 10, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#f9f9f9' }}>
                         <Text style={[styles.text, { fontWeight: 'bold', textAlign: 'center', fontSize: 16, color: '#333', marginBottom: 10 }]}>
@@ -159,26 +131,7 @@ const MyDocument = ({ amount }) => {
         </Document>
     );
 };
-// const PdfFormGenerator = () => {
-//     return (
-//         <PDFDownloadLink
-//             document={<MyDocument />}
-//             fileName="gift-voucher.pdf"
-//         >
-//             {({ loading, error }) => {
-//                 if (error) {
-//                     console.error('❌ Error generating PDF', error);
-//                     return 'Error generating PDF';
-//                 }
-//                 return (
-//                     <button style={styles.button}>
-//                         {loading ? '📦 Creating the voucher...' : '⬇️ Download the voucher'}
-//                     </button>
-//                 );
-//             }}
-//         </PDFDownloadLink>
-//     );
-// };
+
 const PdfFormGenerator = ({ amount }) => {
     return (
         <PDFDownloadLink

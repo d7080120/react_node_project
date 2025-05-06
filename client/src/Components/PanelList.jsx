@@ -1,53 +1,21 @@
-import React, { useState,useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
 import { ProductService } from './ProductService';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import PdfFormGenerator from './EntryDocument';
-import RedeemPoints from './Redeempoints';
 import { Toast } from 'primereact/toast';
-import { setUser } from '../redux/tokenSlice';
-import axios from "axios";
 export default function PanelList() {
     const [panels, setPanels] = useState([]);
     const { token, userInfo } = useSelector((state) => state.token); // Get token and userInfo from Redux
     const [userScore, setUserScore] = useState(userInfo.participant.score); // State to hold user score
     const navigate = useNavigate(); // Use navigate hook
     const toast = useRef(null);
-    const dispatch = useDispatch();
     console.log(userInfo);
-    const onRedeem = async (pointsToRedeem) => {
-        try {
-            const response = await axios.put(
-                `http://localhost:1135/participant`,
-                { score:userInfo.participant.score-pointsToRedeem,_id:userInfo.participant._id },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                    'Content-Type': 'application/json',
-                }
-            );
-
-            toast.current.show({
-                severity: 'success',
-                summary: 'Redemption Successful',
-                detail: `Successfully redeemed ${pointsToRedeem} points!`,
-            });
-
-    
-            const u=response.data.participantUser
-            u.participant=response.data.participant
-            setUserScore(u.participant.score)
-            dispatch(setUser(u));
-            return true; // Return true if redemption is successful
-        } catch (error) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Redemption Failed',
-                detail: 'An error occurred while redeeming points. Please try again later.',
-            });
-            return false; // Return false if redemption fails
-        }
+    const handleNavigate = () => {
+        navigate('/redeem', {
+            state: { availablePoints: userInfo.participant.score },
+        });
     };
     useEffect(() => {
         // Fetch panels data
@@ -61,10 +29,10 @@ export default function PanelList() {
     const itemTemplate = (data) => {
         const handleButtonClick = () => {
             console.log(data.name);
-            navigate(`/panel/${data.name}`, { state: { someProp: data } }); // Replace with your target route and parameter
+            navigate(`/panel/${data.name}`); // Replace with your target route and parameter
         };
-        
-    
+
+
         return (
             <div className="col-10">
                 <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
@@ -81,7 +49,7 @@ export default function PanelList() {
                             </div>
                         </div>
                         <div className="flex flex-row lg:flex-column align-items-start" style={{ height: '100%' }}>
-                            <div className="description" style={{ 
+                            <div className="description" style={{
                                 minHeight: '100px',
                                 maxHeight: '100px',
                                 overflow: 'auto',
@@ -105,24 +73,50 @@ export default function PanelList() {
 
     return (
         <div>
-            <RedeemPoints availablePoints={userInfo.participant.score} onRedeem={onRedeem}></RedeemPoints>
+            {/* <RedeemPoints availablePoints={userInfo.participant.score} onRedeem={onRedeem}></RedeemPoints> */}
+            {/* <RedeemPoints availablePoints={userInfo.participant.score} onRedeem={onRedeem} setUserScore={setUserScore}></RedeemPoints> */}
+            {/* <RedeemPoints availablePoints={userInfo.participant.score}  setUserScore={setUserScore}></RedeemPoints> */}
 
-        <div className="card">
-            {/* Display User Points */}
-            <div style={{
-                marginBottom: '20px',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#4caf50',
-                textAlign: 'center'
+
+            <div className="card" style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '20px',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
             }}>
-                Your Points: {userScore} 
-                <br/>
+                <button
+                    onClick={handleNavigate}
+                    style={{
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        padding: '12px 20px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        transition: 'all 0.3s ease',
+                    }}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = '#45a049')}
+                    onMouseOut={(e) => (e.target.style.backgroundColor = '#4CAF50')}
+                >
+                    Redeem Points
+                </button>
 
+                <div style={{
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    color: '#4CAF50',
+                }}>
+                    Your Points: {userScore}
+                    <br />
+                </div>
             </div>
             <Toast ref={toast} /> {/* Toast component for notifications */}
 
             <DataScroller value={panels} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
-        </div></div>
+        </div>
     );
 }

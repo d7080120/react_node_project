@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Avatar } from 'primereact/avatar';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,13 @@ export default function NavBar() {
             navigate('/');
         }
     }
+    const aboutus = {
+        label: 'About Us',
+        icon: 'pi pi-briefcase ',
+        command: () => {
+            navigate('/aboutus');
+        }
+    }
 
     const start = (
         <img
@@ -30,7 +37,6 @@ export default function NavBar() {
             className="mr-2"
         />
     );
-
     const participantItems = [
         {
             label: 'Home',
@@ -46,6 +52,15 @@ export default function NavBar() {
                 navigate('/participant');
             }
         },
+        {
+            label: 'Redeem points',
+            icon: 'pi pi-gift',
+            command: () => {
+                navigate('/redeem');
+            }
+        },
+        
+        aboutus,
         logout
     ];
 
@@ -71,7 +86,9 @@ export default function NavBar() {
                 navigate('/customerPanels');
             }
         },
-        logout
+        
+        aboutus,
+        logout,
     ];
 
     const end = (

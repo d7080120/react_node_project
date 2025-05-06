@@ -21,6 +21,8 @@ import CustomerHome from './Components/Customer/CustomerHome';
 import OrderPanel from './Components/Customer/OrderPanel';
 import ViewPanels from './Components/Customer/ViewPanels';
 import AnalizePanel from './Components/Customer/AnalizePanel';
+import AboutUs from './Components/AboutUs';
+import RedeemPoints from './Components/Redeempoints';
 
 const UserContext = createContext();
 
@@ -37,7 +39,9 @@ function App() {
         <div style={{ marginTop: '60px' }}> {/* Add margin to avoid overlap */}
           <Routes>
             <Route path='/' element={<Login />} />
+            <Route path='/redeem' element={<RedeemPoints />} />
             <Route path='/participant' element={<PanelList />} />
+            <Route path='/aboutus' element={<AboutUs/>} />
             <Route path='/analizePanel' element={<AnalizePanel />} />
             <Route path='/customer' element={<CustomerHome />} />
             <Route path='/customerPanels' element={<ViewPanels />} />
