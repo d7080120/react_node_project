@@ -22,15 +22,19 @@ const getParticipantById = async (req, res) => {
 }
 
 const updateParticipant = async (req, res) => {
-
     const{ username, name, email, roles}=req.user
     const { address, phone,  gender ,_id} = req.body
     let {score,date}=req.body
     const active=true;
-    score=parseInt(score, 10)
-    date=new Date(date)
-    console.log(date);
-    if (!_id || !username  || !name) {
+    if(score){
+        score=parseInt(score, 10)
+    }
+    if (date){
+        date=new Date(date)
+    }
+    // if (!_id || !username  || !name) {
+        if (!_id ) {
+
         return res.status(400).json({ message: "fields are required" })
     }
     const duplicate = await Participant.findOne({ username: username }).lean()
@@ -41,7 +45,6 @@ const updateParticipant = async (req, res) => {
     if (!participant) {
         return res.status(400).json({ message: 'participant not found' })
     }
-    console.log("oooooo");
     const participantUser = await User.findById(participant.user).exec()
     if (!participantUser) {
         return res.status(400).json({ message: 'participantUser not found' })
@@ -57,24 +60,26 @@ const updateParticipant = async (req, res) => {
     }
         
     
-    participantUser.username = username
-    participantUser.email = email
-    participantUser.active = active
-    participantUser.roles = [...roles]
-    participant.address = { ...address }
-    participant.phone = phone
-    participant.gender = gender
-    participant.dateOfBirth  = new Date(date)
-    participant.score = score
-    participantUser.name = name
+    participantUser.username = username?username:participantUser.username
+    participantUser.email = email?email:participantUser.email
+    participantUser.active = active?active:participantUser.active 
+    participantUser.roles =roles? [...roles]:participantUser.username
+    participant.address = address?{ ...address }:participant.address
+    participant.phone = phone?phone:participant.phone
+    participant.gender = gender?gender:participant.gender
+    participant.dateOfBirth  =date? new Date(date):participant.dateOfBirth
+    participant.score = score?score:participant.score
+    participantUser.name = name?name:participantUser.name
 
     const updatedParticipantUser = await participantUser.save()
     const updatedParticipant = await participant.save()
+    // const user={...participantUser}
+    // user.participant={...participant}
 
-    const participants = await Participant.find().lean()
     res.json({
         message: `${updatedParticipantUser.username} updated`,
-        participants
+        participantUser,
+        participant
     })
 
 }

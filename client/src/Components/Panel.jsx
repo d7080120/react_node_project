@@ -64,7 +64,7 @@ function Panel() {
         } catch (error) {
             setCloseDisable(false)
             console.error("Error saving answers:", error.response?.data || error.message);
-            alert("Failed to save answers");
+            toast.current.show({ severity: 'error', summary: 'Error saving answers' });
         }
 
 
