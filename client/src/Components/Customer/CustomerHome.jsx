@@ -1,13 +1,11 @@
 import React from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import { useNavigate } from 'react-router-dom'; 
 function CustomerHome() {
-    const navigate = useNavigate(); // Use useNavigate instead of useHistory
-
+    const navigate = useNavigate();
     const handleButtonClick = (path) => {
-        navigate(path); // Navigate to the selected path
+        navigate(path); 
     };
 
     return (

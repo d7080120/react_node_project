@@ -3,14 +3,11 @@ import { Menubar } from 'primereact/menubar';
 import { Avatar } from 'primereact/avatar';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-// Importing the image
-import panelImage from '../image.png'; // Adjust the path as per your directory structure
-
+import panelImage from '../image.png'; 
 export default function NavBar() {
     const navigate = useNavigate();
     const { userInfo } = useSelector((state) => state.token);
-    const userName = userInfo.name; // User's name from context/state
+    const userName = userInfo.name; 
     const userParticipant = userInfo.roles.find((r) => r === 'Participant')
     const userCustomer = userInfo.roles.find((r) => r === 'Customer')
 
@@ -101,8 +98,8 @@ export default function NavBar() {
     return (
         <div style={{ position: 'fixed',
             top: 0,
-            width: '99vw', // Use viewport width
-            left: 0, // Make sure it starts from the leftmost edge
+            width: '99vw', 
+            left: 0, 
             zIndex: 1000,
             boxSizing: 'border-box'}}>
             {userCustomer && <Menubar model={customerItems} start={start} end={end} />}

@@ -67,13 +67,8 @@ export default function SignUpParticipant({ setVisible, visible }) {
         console.log(formData);
         const sucsses = sign(data)
         console.log(sucsses);
-        // if(sucsses){reset();setShowMessage(true);}
     };
-    // const changeCity=(e)=>{
-    //     console.log(e,filteredCountries);
-    //     const field='city'
-    //     if (filteredCountries.find((f) =>  f === e.value))  { setCity('') } else { setCity(e.value);
-    // }}
+    
     const getFormErrorMessage = (name) => {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
@@ -91,9 +86,7 @@ export default function SignUpParticipant({ setVisible, visible }) {
             </ul>
         </React.Fragment>
     );
-    const navigate = useNavigate();
     const sign = async (data) => {
-        // const data =  formData
         data.gender = gender
         data.city = data.city.city
         const isValidCity = filteredCountries.some(country => country.city === data.city);
@@ -101,8 +94,6 @@ export default function SignUpParticipant({ setVisible, visible }) {
             toast.current.show({ severity: 'error', summary: 'Submit Failed', detail: "You Shold choose the city from the list" });
             return
         }
-        // data.city =city
-
         console.log(gender);
         console.log(data);
         console.log(formData);
@@ -179,7 +170,6 @@ export default function SignUpParticipant({ setVisible, visible }) {
                                     </div>
                                     <div className="field">
                                         <span className="p-float-label p-input-icon-right" >
-                                            {/* <i className="pi pi-envelope" /> */}
                                             <Controller name="email" control={control}
                                                 rules={{ required: 'Email is required.', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Invalid email address. E.g. example@email.com' } }}
                                                 render={({ field, fieldState }) => (
@@ -197,7 +187,7 @@ export default function SignUpParticipant({ setVisible, visible }) {
                                                 rules={{
                                                     required: 'Phone is required.',
                                                     pattern: {
-                                                        value: /^0\d{2}-\d{3}-\d{4}$/, // Regex for the format 055-674-6336
+                                                        value: /^0\d{2}-\d{3}-\d{4}$/,
                                                         message: 'Invalid phone number. Format: 999-999-9999'
                                                     }
 
@@ -209,26 +199,25 @@ export default function SignUpParticipant({ setVisible, visible }) {
                                                 )}
                                             />
                                             <label htmlFor="phone" className={classNames({ 'p-error': !!errors.phone })}>Phone*</label>
-                                            {/* {fieldState.invalid && <span className="p-error">{fieldState.error.message}</span>} */}
                                         </span>
                                         {getFormErrorMessage('phone')}
                                     </div>
                                     <div className="field">
                                         <span className="p-float-label">
                                             <Controller
-                                                name="date" // Field name
+                                                name="date" 
                                                 control={control}
-                                                rules={{ required: 'Birthday is required.' }} // Required validation
+                                                rules={{ required: 'Birthday is required.' }} 
                                                 render={({ field, fieldState }) => (
                                                     <>
                                                         <Calendar
                                                             id={field.name}
                                                             value={field.value}
-                                                            onChange={(e) => field.onChange(e.value)} // Update value in react-hook-form
+                                                            onChange={(e) => field.onChange(e.value)} 
                                                             dateFormat="dd/mm/yy"
                                                             mask="99/99/9999"
                                                             showIcon
-                                                            className={classNames({ 'p-invalid': fieldState.invalid })} // Apply class for invalid state
+                                                            className={classNames({ 'p-invalid': fieldState.invalid })} 
                                                         />
                                                     </>
                                                 )}
@@ -241,24 +230,21 @@ export default function SignUpParticipant({ setVisible, visible }) {
                                     <div className="field">
                                         <span className="p-float-label">
                                             <Controller
-                                                name="city" // Ensure we're registering the city field
+                                                name="city" 
                                                 control={control}
-                                                rules={{ required: 'City is required.' }} // Required validation
+                                                rules={{ required: 'City is required.' }} 
                                                 render={({ field, fieldState }) => (
                                                     <AutoComplete
-                                                        {...field} // Spread the field props
-                                                        field='city' // Update as needed to match your suggestions
-                                                        value={field.value} // Bind the controller value to AutoComplete
+                                                        {...field} 
+                                                        field='city' 
+                                                        value={field.value} 
                                                         suggestions={filteredCountries}
                                                         completeMethod={search}
                                                         onChange={(e) => {
                                                             field.onChange(e.value)
-                                                            // { (e) => { if (filteredCountries.find((f) =>  f === e.value))  { field.onChange("") } else { field.onChange(e.value); } } }
-                                                            // Set value to react-hook-form
                                                         }}
-                                                        // onBlur={(e) => {changeCity(e)}}
                                                         dropdown
-                                                        className={classNames({ 'p-invalid': fieldState.invalid })} // Apply class for styling if invalid
+                                                        className={classNames({ 'p-invalid': fieldState.invalid })} 
                                                     />
                                                 )}
                                             />

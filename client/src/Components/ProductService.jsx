@@ -17,8 +17,6 @@ export const ProductService = {
             return []
         }
     },
-
-
     getPanelsMini() {
         return Promise.resolve(this.getPanelsData().slice(0, 5));
     },
@@ -35,7 +33,6 @@ export const ProductService = {
     getPanelsWithOrdersSmall() {
         return Promise.resolve(this.getPanelsWithOrdersData().slice(0, 10));
     },
-
     getPanelsWithOrders() {
         return Promise.resolve(this.getPanelsWithOrdersData());
     }

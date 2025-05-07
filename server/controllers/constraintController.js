@@ -6,7 +6,7 @@ const createConstraint = async (req, res) => {
         return res.status(400).json({ message: 'fields are required' })
     }
     const newConstraint = await Constraint.create({ name })
-    if (newConstraint) { // Created
+    if (newConstraint) {
         return res.status(201).json({ message: 'New constraint created',
          })
     } else {

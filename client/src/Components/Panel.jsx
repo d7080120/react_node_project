@@ -23,7 +23,7 @@ function Panel() {
     const { token } = useSelector((state) => state.token);
     const { userInfo } = useSelector((state) => state.token);
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // Use navigate hook
+    const navigate = useNavigate(); 
 
     console.log(closeDisable)
     const handleAnswerChange = (answer) => {
@@ -46,20 +46,19 @@ function Panel() {
         setCloseDisable(true)
         try {
             const res = await axios.put(
-                'http://localhost:1135/panel/addAnswers', // כתובת ה-API
-                { // גוף הבקשה (body)
+                'http://localhost:1135/panel/addAnswers', 
+                { 
                     participant: userInfo._id,
                     answers: answers,
                     panel_id: panel._id,
                 },
-                { // כותרות הבקשה (headers)
+                { 
                     headers: { Authorization: `Bearer ${token}` },
                     'Content-Type': 'application/json'
                 }
             );
 
             if (res.status === 200) {
-                // alert(`you succeed the panel and earned ${escore} points`);
             }
         } catch (error) {
             setCloseDisable(false)
@@ -77,11 +76,10 @@ function Panel() {
             UpUserInfo.participant = updateParticipant
             dispatch(setUser(UpUserInfo));
             const res = await axios.put(
-                'http://localhost:1135/participant', // כתובת ה-API
-                // גוף הבקשה (body)
+                'http://localhost:1135/participant', 
                 updateParticipant
                 ,
-                { // כותרות הבקשה (headers)
+                { 
                     headers: { Authorization: `Bearer ${token}` },
                     'Content-Type': 'application/json'
                 }

@@ -7,22 +7,21 @@ export default function QuestionAnalysisCharts({ question }) {
     const [barChartOptions, setBarChartOptions] = useState({});
     const [pieChartData, setPieChartData] = useState({});
     const [pieChartOptions, setPieChartOptions] = useState({});
+
     useEffect(() => {
         console.log(question);
-        // Count occurrences of each answer based on userAnswers
         const answerCounts = question.userAnswers.reduce((acc, answer) => {
-            const answerBody = answer.body; // Extract body of each answer
+            const answerBody = answer.body; 
             acc[answerBody] = (acc[answerBody] || 0) + 1;
             return acc;
         }, {});
 
-        // Prepare data for the bar chart
         const barData = {
             labels: Object.keys(answerCounts),
             datasets: [
                 {
                     label: 'Answer Count',
-                    data: Object.values(answerCounts).map(Math.floor), // Use whole numbers
+                    data: Object.values(answerCounts).map(Math.floor), 
                     backgroundColor: [
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
@@ -45,24 +44,20 @@ export default function QuestionAnalysisCharts({ question }) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1 // Ensure whole numbers on y-axis
+                        stepSize: 1 
                     }
                 }
             },
             responsive: true,
-            maintainAspectRatio: false // Allows the chart to fill its container
+            maintainAspectRatio: false 
         };
-
-        // Set data and options for the bar chart
         setBarChartData(barData);
         setBarChartOptions(barOptions);
-
-        // Prepare data for the pie chart
         const pieData = {
             labels: Object.keys(answerCounts),
             datasets: [
                 {
-                    data: Object.values(answerCounts).map(Math.floor), // Use whole numbers
+                    data: Object.values(answerCounts).map(Math.floor), 
                     backgroundColor: [
                         'rgba(255, 159, 64, 0.4)',
                         'rgba(75, 192, 192, 0.4)',
@@ -88,14 +83,25 @@ export default function QuestionAnalysisCharts({ question }) {
                 }
             },
             responsive: true,
-            maintainAspectRatio: false // Allows the chart to fill its container
+            maintainAspectRatio: false 
         };
-
-        // Set data and options for the pie chart
         setPieChartData(pieData);
         setPieChartOptions(pieOptions);
 
-    }, [question.userAnswers]); // Re-run effect if userAnswers change
+    }, [question.userAnswers]);
+    const containerStyle = {
+        padding: '1rem',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        gap: '1rem',
+    };
+
+    const chartContainerStyle = {
+        flex: '1 1 calc(50% - 1rem)', 
+        height: '300px', 
+        minWidth: '300px', 
+    };
 
     return (
         <div className="card">
@@ -103,15 +109,14 @@ export default function QuestionAnalysisCharts({ question }) {
             <h3>{question.content}</h3>
             <h3>{question.userAnswers.length} participants in this question</h3>
 
-            <div className="flex justify-content-between" style={{ height: '400px' }}>
-                <div style={{ flex: '1 1 70%', height: '100%' }}>
-                    <Chart type="bar" data={barChartData} options={barChartOptions} style={{justifyContent: 'center',alignItems: 'center'}}/>
+            <div style={containerStyle}>
+                <div style={{ ...chartContainerStyle }}>
+                    <Chart type="bar" data={barChartData} options={barChartOptions} />
                 </div>
-                <div style={{ flex: '1 1 30%', height: '100%' }}>
+                <div style={{ ...chartContainerStyle }}>
                     <Chart type="pie" data={pieChartData} options={pieChartOptions} />
                 </div>
             </div>
         </div>
- 
     );
 }

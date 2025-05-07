@@ -1,13 +1,12 @@
 
 import React from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation
-import QuestionAnalysisCard from './QuestionAnalysisCard'; // Ensure the correct import
+import { useLocation } from 'react-router-dom';
+import QuestionAnalysisCard from './QuestionAnalysisCard'; 
 import { Card } from 'primereact/card';
 
 const AnalizePanel = () => {
     const location = useLocation();
-    const panel = location.state.someProp; // Ensure someProp is defined in the state
-
+    const panel = location.state.someProp; 
     return (
         <div>
             <h2>{panel.name} - Answers Analysis</h2>

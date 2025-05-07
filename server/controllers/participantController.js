@@ -22,23 +22,30 @@ const getParticipantById = async (req, res) => {
 }
 
 const updateParticipant = async (req, res) => {
-    const{ username, name, email, roles}=req.user
-    const { address, phone,  gender ,_id} = req.body
-    let {score,date}=req.body
-    const active=true;
-    if(score){
-        score=parseInt(score, 10)
+    const { username, name, email, roles } = req.user
+    const { address, phone, gender, _id } = req.body
+    let { score, date } = req.body
+    const active = true;
+    try {
+        score = parseInt(score, 10)
     }
-    if (date){
-        date=new Date(date)
+    catch (e) {
+        score =0
     }
-    // if (!_id || !username  || !name) {
-        if (!_id ) {
+    if (date) {
+        date = new Date(date);
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            date = null; 
+        }
+    } else {
+        date = null;
+    }
+    if (!_id) {
 
         return res.status(400).json({ message: "fields are required" })
     }
     const duplicate = await Participant.findOne({ username: username }).lean()
-    if (duplicate&&duplicate._id!=_id) {
+    if (duplicate && duplicate._id != _id) {
         return res.status(409).json({ message: `${duplicate._id} Duplicate username` })
     }
     const participant = await Participant.findById(_id).exec()
@@ -50,32 +57,32 @@ const updateParticipant = async (req, res) => {
         return res.status(400).json({ message: 'participantUser not found' })
     }
     console.log(participantUser);
-    if (roles.find(r=>r==="Customer")&&(!participantUser.roles.find(r=>r==="Customer"))){
-        const customerObject = { user: participant.user, phone, panels:[] }
+    if (roles.find(r => r === "Customer") && (!participantUser.roles.find(r => r === "Customer"))) {
+        const customerObject = { user: participant.user, phone, panels: [] }
         const customer = await Customer.create(customerObject)
         if (!customer) {
             return res.status(400).json({ message: 'Invalid customer' })
 
         }
     }
-        
-    
-    participantUser.username = username?username:participantUser.username
-    participantUser.email = email?email:participantUser.email
-    participantUser.active = active?active:participantUser.active 
-    participantUser.roles =roles? [...roles]:participantUser.username
-    participant.address = address?{ ...address }:participant.address
-    participant.phone = phone?phone:participant.phone
-    participant.gender = gender?gender:participant.gender
-    participant.dateOfBirth  =date? new Date(date):participant.dateOfBirth
-    participant.score = score?score:participant.score
-    participantUser.name = name?name:participantUser.name
+
+
+    participantUser.username = username ? username : participantUser.username
+    participantUser.email = email ? email : participantUser.email
+    participantUser.active = active ? active : participantUser.active
+    participantUser.roles = roles ? [...roles] : participantUser.username
+    participant.address = address ? { ...address } : participant.address
+    participant.phone = phone ? phone : participant.phone
+    participant.gender = gender ? gender : participant.gender
+
+    if (!(!date || !(date instanceof Date) || isNaN(date.getTime()))) {
+        participant.dateOfBirth = new Date(date)
+    }
+    participant.score = score ? score : participant.score
+    participantUser.name = name ? name : participantUser.name
 
     const updatedParticipantUser = await participantUser.save()
     const updatedParticipant = await participant.save()
-    // const user={...participantUser}
-    // user.participant={...participant}
-
     res.json({
         message: `${updatedParticipantUser.username} updated`,
         participantUser,
@@ -87,7 +94,7 @@ const updateParticipant = async (req, res) => {
 //     console.log(req.user)
 //     const{ _id, username, name, email,password, roles, active}=req.user
 //     const { address, phone,  gender ,date,score} = req.body
-    
+
 //     if (!_id || !username || !password || !name) {
 //         return res.status(400).json({ message: "fields are required" })
 //     }
@@ -117,8 +124,8 @@ const updateParticipant = async (req, res) => {
 //             // return res.status(400).json({ message: "Invalid customer received" })
 //         }
 //     }
-        
-    
+
+
 //     participantUser.username = username
 //     participantUser.email = email
 //     participantUser.active = active
@@ -153,12 +160,12 @@ const deleteParticipant = async (req, res) => {
     }
     const participantUser = await User.findById(participant.user._id).exec()
 
-    if(participantUser.roles.length===1){
-    await participantUser.deleteOne()
+    if (participantUser.roles.length === 1) {
+        await participantUser.deleteOne()
 
     }
-    else{
-        participantUser.roles=participantUser.roles.filter(role=>role!="Participant")
+    else {
+        participantUser.roles = participantUser.roles.filter(role => role != "Participant")
     }
     const updatedParticipantUser = await participantUser.save()
 

@@ -35,10 +35,10 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
         userInfo.customer = {
-            _id:foundCustomer._id,
+            _id: foundCustomer._id,
             phone: foundCustomer.phone,
             panels: [...foundCustomer.panels],
-            
+
         }
     }
     if (foundUser.roles.find(r => r === "Participant")) {
@@ -47,22 +47,20 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' })
         }
         userInfo.participant = {
-            _id:foundParticipant._id,
+            _id: foundParticipant._id,
             phone: foundParticipant.phone,
-            dateOfBirth: foundParticipant.dateOfBirth ,
+            dateOfBirth: foundParticipant.dateOfBirth,
             address: { ...foundParticipant.address },
             score: foundParticipant.score,
             gender: foundParticipant.gender
         }
-      }
+    }
     const accessToken = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET)
-    res.json({ accessToken: accessToken ,userInfo:userInfo})
-
+    res.json({ accessToken: accessToken, userInfo: userInfo })
 }
 const registerParticipant = async (req, res) => {
-    const { username, password, name, email, phone,  city,address, date, gender } = req.body
-    // if (!name || !username || !password || !email || !phone || !country || !city || !street || !build || !apartment || !date || !gender) {// Confirm data
-    if (!name || !username || !password || !email || !phone ||  !city || !date || !gender) {// Confirm data
+    const { username, password, name, email, phone, city, address, date, gender } = req.body
+    if (!name || !username || !password || !email || !phone || !city || !date || !gender) {
         return res.status(400).json({ message: 'All fields are required' })
     }
     const duplicate = await User.findOne({ username: username }).lean()
@@ -79,14 +77,15 @@ const registerParticipant = async (req, res) => {
     }
     userId = user._id
     const fulladdress = {
-        // build, street,
-         city, 
-         address
-        //  country, apartment
+        city,
+        address
     }
-
-    const dateOfBirth = new Date(date)
-    const participantObject = { user: userId, phone, address:fulladdress, dateOfBirth, score: 0, gender }
+    let dateOfBirth=null;
+    dateOfBirth = new Date(date);
+    if (!(dateOfBirth instanceof Date) || isNaN(dateOfBirth.getTime())) {
+        return res.status(400).json({ message: 'Invalid user received' })
+    }
+    const participantObject = { user: userId, phone, address: fulladdress, dateOfBirth, score: 0, gender }
     const participant = await Participant.create(participantObject)
     if (!participant) {
         console.log(user.roles.length)

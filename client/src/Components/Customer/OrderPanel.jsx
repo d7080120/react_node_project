@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const QuestionCard = React.memo(({ question, onRemoveQuestion, onChange, onRemoveAnswer, onAddAnswer }) => {
     const cardStyle = {
-        width: '350px', // Narrower card width
+        width: '350px',
         margin: '10px',
     };
 
@@ -183,26 +183,22 @@ const OrderPanel = () => {
             });
         }
     };
-
-    // Calculate the survey cost
     const surveyCost = panelDetails.questions.length * 5;
-
     return (
         <div className="order-panel">
             <h2>Create Panel Order</h2>
             
-            {/* Display Survey Cost with Bold and Highlighted Style */}
             <div style={{
                 marginBottom: '20px',
-                fontSize: '24px', // Larger font size
-                fontWeight: 'bold', // Bold font
-                color: '#ffffff', // White text
-                backgroundColor: '#4caf50', // Green background
-                padding: '10px 20px', // Padding around the text
-                borderRadius: '8px', // Rounded corners
-                textAlign: 'center', // Centered text
-                width: 'fit-content', // Adjust width to fit content
-                margin: '0 auto' // Center horizontally
+                fontSize: '24px', 
+                fontWeight: 'bold',
+                color: '#ffffff', 
+                backgroundColor: '#4caf50',
+                padding: '10px 20px', 
+                borderRadius: '8px', 
+                textAlign: 'center', 
+                width: 'fit-content', 
+                margin: '0 auto' 
             }}>
                 Survey Cost: ${surveyCost}
             </div>

@@ -7,12 +7,17 @@ import { CustomerPanelService } from './CustomerPanelService';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ProgressBar } from 'primereact/progressbar';
-
 export default function PanelList() {
     const [panels, setPanels] = useState([]);
     const { token } = useSelector((state) => state.token);
     const { userInfo } = useSelector((state) => state.token);
-
+    const [isHovered, setIsHovered] = useState(false); 
+    const handleMouseEnter = () => {
+        setIsHovered(true); 
+    };
+    const handleMouseLeave = () => {
+        setIsHovered(false); 
+    };
     const navigate = useNavigate();
     useEffect(() => {
         CustomerPanelService.getPanels(token, userInfo).then((data) => setPanels(data));
@@ -21,10 +26,8 @@ export default function PanelList() {
     const itemTemplate = (data) => {
         const handleButtonClick = () => {
             console.log(data);
-            navigate(`/analizePanel`, { state: { someProp: data } }); // Replace with your target route and parameter
+            navigate(`/analizePanel`, { state: { someProp: data } });
         };
-
-    
         return (
             <div className="col-10">
                 <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
@@ -61,8 +64,26 @@ export default function PanelList() {
                 </div>
                 <div className="card">
                     {console.log(data)}
-                    {/* <ProgressBar value={data.listParticipans?.length} displayValueTemplate={data.numsOfParticipnts}></ProgressBar> */}
-                    <div style={{ width: '100%', margin: 'auto', textAlign: 'center' }}>
+                    <div style={{ width: '100%', margin: 'auto', textAlign: 'center', position: 'relative' }}>
+            {isHovered && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '-30px', 
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: 'grey', 
+                        color: 'white', 
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
+                    }}
+                >
+                    {data.listParticipans.length}/{data.numsOfParticipants} participants
+                </div>
+            )}
             <div
                 style={{
                     height: '25px',
@@ -72,22 +93,17 @@ export default function PanelList() {
                     overflow: 'hidden',
                     position: 'relative',
                 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave} 
             >
                 <div
                     style={{
                         height: '100%',
-                        width: `${(data.listParticipans.length / data.numsOfParticipants) * 100}%`, // רוחב מותאם לפי החלק היחסי
-                        backgroundColor: '#4caf50', // צבע ירוק
-                        transition: 'width 0.5s ease-in-out', // אנימציה חלקה
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: 'bold',
+                        width: `${(data.listParticipans.length / data.numsOfParticipants) * 100}%`, 
+                        backgroundColor: '#4caf50', 
+                        transition: 'width 0.5s ease-in-out',
                     }}
-                >
-                    {data.listParticipans.length}/{data.numsOfParticipants} participants
-                </div>
+                ></div>
             </div>
         </div>
                 </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "primereact/card";
 import { Message } from "primereact/message";
 import { Button } from "primereact/button";
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 function StartPanel({  panel, setNum }) {
     const { userInfo } = useSelector((state) => state.token);

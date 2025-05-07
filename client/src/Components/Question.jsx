@@ -6,14 +6,13 @@ import { Dialog } from 'primereact/dialog';
 function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) {
     const handleSave = () => {
         if (selectedAnswer) {
-            onSave(question._id, selectedAnswer, question.score); // Save the answer
+            onSave(question._id, selectedAnswer, question.score); 
             onNext();
         }
     };
-
     const handleNext = () => {
         setVisible(false)
-        onNext(); // Proceed to the next question
+        onNext(); 
 
     };
     const [visible, setVisible] = useState(false);
@@ -40,11 +39,11 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
                 {question.content}
             </div>
             {question.answers.map((answer, index) => (
-                <div key={index} style={{ textAlign: 'left', wordWrap: 'break-word' }}> {/* Left align and wrap words */}
+                <div key={index} style={{ textAlign: 'left', wordWrap: 'break-word' }}> 
                     <RadioButton
                         value={answer}
-                        checked={selectedAnswer === answer} // Correctly checks the selected answer
-                        onChange={(e) => onAnswerChange(e.value)} // Updates selected answer
+                        checked={selectedAnswer === answer} 
+                        onChange={(e) => onAnswerChange(e.value)} 
                         inputId={`answer_${index}`}
                     />
                     <label htmlFor={`answer_${index}`}>{answer}</label>
@@ -59,14 +58,8 @@ function Question({ question, onAnswerChange, selectedAnswer, onSave, onNext }) 
                     label="Continue"
                     icon="pi pi-save"
                     onClick={handleSave}
-                    disabled={!selectedAnswer} // Disable until an answer is selected
-                    
+                    disabled={!selectedAnswer} 
                 />
-                {/* <Button
-                    label="Next"
-                    icon="pi pi-arrow-right"
-                    onClick={handleNext}
-                /> */}
                 <Dialog header="skip qustion" visible={visible} position={position} style={{ width: '50vw' }} onHide={() => { if (!visible) return; setVisible(false); }} footer={footerContent} draggable={false} resizable={false}>
                     <p className="m-0">
                         if you skip this question you will lose {question.score} points

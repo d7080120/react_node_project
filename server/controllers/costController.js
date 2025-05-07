@@ -1,5 +1,4 @@
 const Cost = require("../models/Cost");
-
 const createCost = async (req, res) => {
     const { name, description, cost, score,category } = req.body
     if (!cost||!name||!score||!category) {
@@ -8,10 +7,9 @@ const createCost = async (req, res) => {
     const ifName=await Cost.findOne({name:name})
     if (ifName)
         return res.status(400).json({ message: 'name already exist' })
-
     const newCost = await Cost.create({ name, description, cost, score,category })
     const costs = await Cost.find().lean()
-    if (newCost) { // Created
+    if (newCost) {
         return res.status(201).json({ message: 'New cost created',
             costs:costs
          })
@@ -19,7 +17,6 @@ const createCost = async (req, res) => {
         return res.status(400).json({ message: 'Invalid cost ' })
     }
 }
-
 const getAllCosts = async (req,res) => {
     console.log(req.user)
     const costs=await Cost.find().lean()
@@ -28,7 +25,6 @@ const getAllCosts = async (req,res) => {
     }
     res.json(costs)
 }
-
 const getCostById = async (req, res) => {
     const {_id} = req.params
     const cost = await Cost.findById(_id).lean()
@@ -37,7 +33,6 @@ const getCostById = async (req, res) => {
     }
     res.json(cost)
     }
-
 const updateCost=async (req,res)=>{
     const {name, description, cost, score,category }=req.body
     if(!cost||!name||!score||!category){

@@ -6,6 +6,4 @@ router.post("/registerCustomer", authController.registerCustomer)
 router.post("/registerParticipant", authController.registerParticipant)
 router.post("/registerMaster", authController.registerMaster)
 
-
-
 module.exports = router

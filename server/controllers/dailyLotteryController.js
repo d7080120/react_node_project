@@ -9,7 +9,7 @@ const createDailyLottery = async (req, res) => {
         return res.status(409).json({ message: "Duplicate email" })
     }
     const newDailyLottery = await DailyLottery.create({ email})
-    if (newDailyLottery) { // Created
+    if (newDailyLottery) { 
         return res.status(201).json({ message: 'New dailyLottery created',
          })
     } else {

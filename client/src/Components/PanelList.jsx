@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 export default function PanelList() {
     const [panels, setPanels] = useState([]);
-    const { token, userInfo } = useSelector((state) => state.token); // Get token and userInfo from Redux
-    const [userScore, setUserScore] = useState(userInfo.participant.score); // State to hold user score
-    const navigate = useNavigate(); // Use navigate hook
+    const { token, userInfo } = useSelector((state) => state.token);
+    const [userScore, setUserScore] = useState(userInfo.participant.score); 
+    const navigate = useNavigate(); 
     const toast = useRef(null);
     console.log(userInfo);
     const handleNavigate = () => {
@@ -17,19 +17,28 @@ export default function PanelList() {
             state: { availablePoints: userInfo.participant.score },
         });
     };
+    const labelStyle = {
+        backgroundColor: "#f0f8ff",
+        color: "#333",
+        padding: "15px",
+        borderRadius: "8px",
+        textAlign: "center",
+        fontSize: "16px",
+        fontFamily: "Arial, sans-serif",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        maxWidth: "400px",
+        margin: "20px auto"
+    };
     useEffect(() => {
-        // Fetch panels data
         ProductService.getPanels(token).then((data) => setPanels(data));
-
-        // Set the user's score from userInfo
         if (userInfo && userInfo.score) {
             setUserScore(userInfo.score);
         }
-    }, [token, userInfo]); // Add token and userInfo to dependency array
+    }, [token, userInfo]); 
     const itemTemplate = (data) => {
         const handleButtonClick = () => {
             console.log(data.name);
-            navigate(`/panel/${data.name}`); // Replace with your target route and parameter
+            navigate(`/panel/${data.name}` ,{ state: { someProp: data }}); 
         };
 
 
@@ -73,11 +82,6 @@ export default function PanelList() {
 
     return (
         <div>
-            {/* <RedeemPoints availablePoints={userInfo.participant.score} onRedeem={onRedeem}></RedeemPoints> */}
-            {/* <RedeemPoints availablePoints={userInfo.participant.score} onRedeem={onRedeem} setUserScore={setUserScore}></RedeemPoints> */}
-            {/* <RedeemPoints availablePoints={userInfo.participant.score}  setUserScore={setUserScore}></RedeemPoints> */}
-
-
             <div className="card" style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -114,9 +118,11 @@ export default function PanelList() {
                     <br />
                 </div>
             </div>
-            <Toast ref={toast} /> {/* Toast component for notifications */}
-
+            <Toast ref={toast} /> 
             <DataScroller value={panels} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
+            <div style={labelStyle}>
+            When new surveys are added, the system will send you an email.
+        </div>
         </div>
     );
 }
