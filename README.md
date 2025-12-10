@@ -31,18 +31,12 @@ SurveySphere
 
 > Images stored in `/images`
 
-![Public Survey UI](./images/public-survey.png)  
-![Admin Dashboard](./images/admin-dashboard.png)  
-![Live Analytics](./images/live-analytics.png)  
-![Survey List](./images/survey-list.png)  
-
 ## Tech Stack
 
 ### Backend
 - Node.js + Express
 - MongoDB + Mongoose
 - JWT Authentication
-- Socket.IO for real-time updates
 
 ### Frontend
 - React + Redux Toolkit
